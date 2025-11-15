@@ -21,9 +21,7 @@ def home(request):
     return render(request, 'home.html')
 
 
-# -------------------------
-# SIGNUP
-# -------------------------
+#Signup
 def signup(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -71,9 +69,7 @@ def signup(request):
     return render(request, 'registration/signup.html')
 
 
-# -------------------------
-# LOGIN
-# -------------------------
+#Login
 def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -97,9 +93,7 @@ def logout_view(request):
     return redirect("login")
 
 
-# -------------------------
-# DASHBOARD
-# -------------------------
+# dashboard
 @login_required
 def dashboard(request):
     expenses = Expense.objects.filter(user=request.user).order_by('-date')
@@ -123,9 +117,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', context)
 
 
-# -------------------------
-# ADD EXPENSE
-# -------------------------
+# add expense
 @login_required
 def add_expense(request):
     if request.method == "POST":
@@ -141,9 +133,7 @@ def add_expense(request):
     return render(request, 'expenses/add_expense.html', {'form': form})
 
 
-# -------------------------
-# VIEW EXPENSES
-# -------------------------
+#view expense
 @login_required
 def view_expenses(request):
     expenses = Expense.objects.filter(user=request.user).order_by('-date')
@@ -162,9 +152,7 @@ def view_expenses(request):
     return render(request, 'expenses/view_expenses.html', context)
 
 
-# -------------------------
-# EDIT EXPENSE
-# -------------------------
+#edit expense
 @login_required
 def edit_expense(request, expense_id):
     expense = get_object_or_404(Expense, id=expense_id, user=request.user)
@@ -179,9 +167,7 @@ def edit_expense(request, expense_id):
     return render(request, "expenses/edit_expense.html", {"form": form})
 
 
-# -------------------------
-# DELETE EXPENSE
-# -------------------------
+#Delete expense
 @login_required
 def delete_expense(request, expense_id):
     expense = get_object_or_404(Expense, id=expense_id, user=request.user)
@@ -192,17 +178,13 @@ def delete_expense(request, expense_id):
     return render(request, "expenses/confirm_delete.html", {"expense": expense})
 
 
-# -------------------------
-# PROFILE
-# -------------------------
+#profile
 @login_required
 def profile(request):
     return render(request, "profile.html")
 
 
-# -------------------------
-# EDIT PROFILE
-# -------------------------
+#profile edit
 @login_required
 def edit_profile(request):
     if request.method == "POST":
@@ -215,9 +197,7 @@ def edit_profile(request):
     return render(request, "edit_profile.html")
 
 
-# -------------------------
-# CHANGE PASSWORD
-# -------------------------
+#change password
 @login_required
 def change_password(request):
     if request.method == "POST":
@@ -234,32 +214,3 @@ def change_password(request):
 
     return render(request, "change_password.html", {"form": form})
 
-
-# -------------------------
-# REPORTS
-# -------------------------
-# @login_required
-# def reports(request):
-#     expenses = Expense.objects.filter(user=request.user)
-    
-#     total_expense = expenses.aggregate(total=Sum('amount'))['total'] or 0
-
-#     categories = expenses.values_list('category', flat=True).distinct()
-#     category_totals = [
-#         expenses.filter(category=cat).aggregate(total=Sum('amount'))['total'] or 0
-#         for cat in categories
-#     ]
-
-#     monthly_expenses = (
-#         expenses.annotate(month=TruncMonth('date'))
-#         .values('month')
-#         .annotate(total=Sum('amount'))
-#         .order_by('month')
-#     )
-
-#     return render(request, 'reports.html', {
-#         'total_expense': total_expense,
-#         'categories': list(categories),
-#         'category_totals': category_totals,
-#         'monthly_expenses': monthly_expenses,
-#     })
