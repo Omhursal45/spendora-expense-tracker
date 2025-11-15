@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Signup | Spendora{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid p-0">
+  <div class="row g-0" style="min-height: 100vh;">
+
+    <!-- LEFT SIDE (SIGNUP FORM) -->
+    <div class="col-md-5 d-flex align-items-center justify-content-center"
+         style="background: #f8fafc; padding: 40px;">
+
+      <div class="card shadow p-4"
+           style="width: 350px; border-radius: 1rem;">
+
+        <h2 class="fw-bold text-center mb-2" style="color:#16a34a;">Create Account</h2>
+        <p class="text-center text-muted mb-4">Welcome to Spendora</p>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} text-center py-2">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Username</label>
+            <input type="text" name="username" class="form-control modern-input"
+                   placeholder="Enter username" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email</label>
+            <input type="email" name="email" class="form-control modern-input"
+                   placeholder="Enter email" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Password</label>
+            <input type="password" name="password1" class="form-control modern-input"
+                   placeholder="Create password" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Confirm Password</label>
+            <input type="password" name="password2" class="form-control modern-input"
+                   placeholder="Confirm password" required>
+          </div>
+
+          <button class="btn btn-success w-100 py-2 fw-bold modern-btn">Sign Up</button>
+        </form>
+
+        <p class="text-center mt-3">
+          Already have an account?
+          <a href="{% url 'login' %}" class="fw-semibold text-success">Login</a>
+        </p>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE (BIG IMAGE SECTION) -->
+    <div class="col-md-7 d-none d-md-block p-0">
+      <img src="{% static 'images/expense.jpg' %}"
+          class="img-fluid"
+          style="height: 100vh; width: 100%; object-fit: cover; object-position: center;">
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .modern-input {
+    height: 42px;
+    border-radius: 0.6rem;
+    border: 1.5px solid #d1d5db;
+    transition: 0.25s;
+  }
+  .modern-input:focus {
+    border-color: #16a34a;
+    box-shadow: 0 0 6px rgba(22,163,74,0.25);
+  }
+  .modern-btn {
+    border-radius: 0.6rem;
+  }
+</style>
+
+{% endblock %}
