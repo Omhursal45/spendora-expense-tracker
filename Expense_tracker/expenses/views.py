@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Expense
 from .form import ExpenseForm
+from django.views.decorators.cache import never_cache
 
 # Email imports
 from django.core.mail import EmailMultiAlternatives
@@ -87,6 +88,8 @@ def login_view(request):
 
 
 # LOGOUT
+@never_cache
+@login_required
 def logout_view(request):
     logout(request)
     messages.success(request, "Logged out successfully!")
@@ -144,7 +147,7 @@ def view_expenses(request):
 
     context = {
         'expenses': expenses,
-        'total_expense': total_expense,
+        'total_expenses': total_expense,
         'total_items': total_items,
         'avg_expense': avg_expense,
         'max_expense': max_expense,
@@ -213,4 +216,5 @@ def change_password(request):
         form = PasswordChangeForm(request.user)
 
     return render(request, "change_password.html", {"form": form})
+
 

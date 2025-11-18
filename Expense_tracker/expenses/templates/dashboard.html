@@ -198,11 +198,14 @@
             {% for expense in expenses %}
               <tr>
                 <td>{{ expense.title }}</td>
-                <td>
-                  <span class="badge-category" style="background: {{ expense.category_color }}">
+               <td>
+                <span class="badge-category" style="background: #4f46e5;"> <!-- You can hardcode color or add a color field later -->
                     {{ expense.category }}
-                  </span>
+                </span>
                 </td>
+
+
+
                 <td class="fw-bold text-danger">₹{{ expense.amount }}</td>
                 <td>{{ expense.date }}</td>
               </tr>
