@@ -1,31 +1,90 @@
-from django.shortcuts import render
-from rest_framework import status
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import SignupSerializer,LoginSerializer
-from django.contrib.auth import authenticate
+from rest_framework import status
 
-# Create your views here.
+from .serializers import SignupSerializer, LoginSerializer
+from django.contrib import messages
+
+
+# ---------------------
+# TEMPLATE VIEWS
+# ---------------------
+
+def login_page(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            login(request, user)
+            return redirect("/")  # redirect to home
+        else:
+            return render(request, "registration/login.html", {
+                "error": "Invalid username or password"
+            })
+
+    return render(request, "registration/login.html")
+
+
+def signup_page(request):
+
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if password != confirm_password:
+            return render(request, "registration/signup.html", {
+                "error": "Passwords do not match"
+            })
+
+        if User.objects.filter(username=username).exists():
+            return render(request, "registration/signup.html", {
+                "error": "Username already taken"
+            })
+
+        if User.objects.filter(email=email).exists():
+            return render(request, "registration/signup.html", {
+                "error": "Email already registered"
+            })
+
+        User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
+
+        return redirect("login")
+
+    return render(request, "registration/signup.html")
+
+
+# ---------------------
+# API VIEWS
+# ---------------------
+
 class SignupAPI(APIView):
     def post(self, request):
         serializer = SignupSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'msg' : 'User created successfully!!'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+            return Response({"msg": "User created"}, status=201)
+        return Response(serializer.errors, status=400)
+
+
 class LoginAPI(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        username = serializer.validated_data['username']
-        password = serializer.validated_data['password']
-        
-        user = authenticate(username=username, password=password)
 
-        if user:
-            return Response({'msg' : 'Login successfull!!','username': username})
-        else:
-            return Response({'errors' : 'Invalid Credentials!'}, status=status.HTTP_401_UNAUTHORIZED)
+        if serializer.is_valid():
+            user = serializer.validated_data["user"]
+            login(request, user)
+            return Response({"msg": "Login success"}, status=200)
+
+        return Response(serializer.errors, status=400)

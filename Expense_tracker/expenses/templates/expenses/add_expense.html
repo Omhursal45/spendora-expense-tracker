@@ -4,46 +4,119 @@
 {% block title %}Add Expense | Spendora{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-5">
-  <div class="col-md-6">
-    <div class="card shadow-sm border-0 rounded-4">
-      <div class="card-header bg-primary text-white text-center">
-        <h4 class="mb-0">&#128221; Add New Expense</h4>
+<style>
+body { background: #f5f7fb; }
+.container-flex { display: flex; gap: 30px; flex-wrap: wrap; }
+.left-panel, .right-panel { background: white; border-radius: 20px; box-shadow: 0 8px 28px rgba(0,0,0,0.08); padding: 30px; }
+.left-panel { flex: 1 1 450px; }
+.right-panel { flex: 1 1 350px; display: flex; flex-direction: column; gap: 20px; }
+
+.metric-card { border-radius: 14px; padding: 20px; background: #f9f9f9; text-align:center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);}
+.metric-value { font-size: 24px; font-weight: 700; margin-top: 5px; }
+.chart-container { position: relative; width: 100%; min-height: 200px; }
+ul.top-categories { list-style:none; padding:0; margin:0; }
+ul.top-categories li { display:flex; justify-content: space-between; margin-bottom: 8px; font-weight:600; }
+.tip-card { padding:20px; border-radius:16px; color:white; background: linear-gradient(135deg,#4f46e5,#6366f1); text-align:center; font-size:14px;}
+button.btn-lg { width:100%; font-size:18px; }
+</style>
+
+<div class="container-flex">
+  <!-- LEFT PANEL: Add Expense Form -->
+  <div class="left-panel">
+    <h4 class="mb-4">📝 Add New Expense</h4>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3">
+          {{ field.label_tag }}
+          {% if field.field.widget.input_type in "text number date" %}
+            {{ field|add_class:"form-control"|attr:"placeholder:Enter " }}
+          {% elif field.field.widget.input_type == "select" %}
+            {{ field|add_class:"form-select" }}
+          {% else %}
+            {{ field }}
+          {% endif %}
+          {% if field.errors %}
+            <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="d-grid mt-4">
+        <button type="submit" class="btn btn-primary btn-lg">Add Expense</button>
       </div>
-      <div class="card-body p-4">
-        <form method="post">
-          {% csrf_token %}
+    </form>
+  </div>
 
-          {% for field in form %}
-            <div class="mb-3">
-              {{ field.label_tag }}
-
-              {% if field.field.widget.input_type == "text" or field.field.widget.input_type == "number" %}
-                {{ field|add_class:"form-control"|attr:"placeholder:Enter " }}
-              {% elif field.field.widget.input_type == "select" %}
-                {{ field|add_class:"form-select" }}
-              {% elif field.field.widget.input_type == "date" %}
-                {{ field|add_class:"form-control"|attr:"placeholder:Select " }}
-              {% else %}
-                {{ field }}
-              {% endif %}
-
-              {% if field.errors %}
-                <div class="text-danger small mt-1">{{ field.errors }}</div>
-              {% endif %}
-            </div>
+  <!-- RIGHT PANEL: Stats & Charts -->
+  <div class="right-panel">
+    <!-- Top 3 Categories -->
+    <div class="metric-card">
+      <h6>Top Spending Categories</h6>
+      {% if top_categories %}
+        <ul class="top-categories">
+          {% for cat, total in top_categories %}
+            <li>{{ cat }} <span>₹{{ total }}</span></li>
           {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">No data available.</p>
+      {% endif %}
+    </div>
 
-          <div class="d-grid mt-4">
-            <button type="submit" class="btn btn-success btn-lg">Add Expense</button>
-          </div>
-        </form>
+    <!-- Quick Stats -->
+    <div class="metric-card d-flex justify-content-between">
+      <div>
+        <p class="text-muted mb-1">Highest Expense</p>
+        <div class="metric-value text-danger">₹{{ max_expense }}</div>
+      </div>
+      <div>
+        <p class="text-muted mb-1">Average Expense</p>
+        <div class="metric-value text-warning">₹{{ avg_expense }}</div>
+      </div>
+      <div>
+        <p class="text-muted mb-1">Total Entries</p>
+        <div class="metric-value text-success">{{ total_items }}</div>
       </div>
     </div>
 
-    <div class="text-center mt-3">
-      <a href="{% url 'view_expenses' %}" class="text-decoration-none text-primary">&larr; Back to Expenses</a>
+    <!-- Mini Category Chart -->
+    <div class="metric-card">
+      <h6>Spending Distribution</h6>
+      <div class="chart-container">
+        <canvas id="miniCategoryChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Tip Card -->
+    <div class="tip-card">
+      💡 Tip of the Day: Track your daily expenses to stay on top of your budget!
     </div>
   </div>
 </div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ categories|json_script:"cat_data" }}
+{{ category_totals|json_script:"cat_totals_data" }}
+
+<script>
+const categories = JSON.parse(document.getElementById("cat_data").textContent);
+const categoryTotals = JSON.parse(document.getElementById("cat_totals_data").textContent);
+const colors = ["#F72585","#4ECDC4","#FFD93D","#FF6F91","#4f46e5","#FF9F1C","#2EC4B6"];
+
+new Chart(document.getElementById("miniCategoryChart"), {
+  type: 'doughnut',
+  data: {
+    labels: categories,
+    datasets: [{
+      data: categoryTotals,
+      backgroundColor: categories.map((_, i) => colors[i % colors.length]),
+      borderColor: '#fff',
+      borderWidth: 2
+    }]
+  },
+  options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{position:'bottom', labels:{boxWidth:12}} } }
+});
+</script>
 {% endblock %}

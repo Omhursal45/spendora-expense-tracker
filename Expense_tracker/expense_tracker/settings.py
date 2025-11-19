@@ -148,3 +148,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'spendora.notify@gmail.com'
 EMAIL_HOST_PASSWORD = 'fbst vnxh ohvg jrkk'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+import os
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # <-- folder where collectstatic will store files

@@ -15,7 +15,8 @@
         <h2 class="text-center mb-2 fw-bold">Welcome Back 👋</h2>
         <p class="text-center text-muted mb-4">Login to continue</p>
 
-        <form method="POST" class="shadow p-4 rounded-4 bg-light">
+        <!-- ✅ FIXED: Added action to send POST request to login API -->
+        <form method="POST" action="{% url 'login' %}" class="shadow p-4 rounded-4 bg-light">
           {% csrf_token %}
 
           {% if form.errors %}

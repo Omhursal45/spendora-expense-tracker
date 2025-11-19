@@ -99,11 +99,13 @@
           </form>
         {% else %}
             <a class="btn btn-light btn-sm me-2" href="{% url 'login' %}">
-              <i class="bi bi-box-arrow-in-right"></i> Login
+                <i class="bi bi-box-arrow-in-right"></i> Login
             </a>
-            <a class="btn btn-outline-light btn-sm" href="{% url 'signup' %}">
+
+              <a class="btn btn-outline-light btn-sm" href="{% url 'signup' %}">
               <i class="bi bi-person-plus"></i> Sign Up
-            </a>
+          </a>
+
         {% endif %}
       </div>
 

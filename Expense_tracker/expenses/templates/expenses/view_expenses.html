@@ -49,17 +49,17 @@
         <table class="table table-hover align-middle mb-0">
             <thead class="table-dark">
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Amount (₹)</th>
-                    <th scope="col">Date</th>
-                    <th scope="col" class="text-center">Actions</th>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Amount (₹)</th>
+                    <th>Date</th>
+                    <th class="text-center">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for expense in expenses %}
-                <tr class="align-middle">
+                <tr id="expense-{{ expense.id }}">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ expense.title }}</td>
                     <td>
@@ -77,9 +77,10 @@
                         <a href="{% url 'edit_expense' expense.id %}" class="btn btn-outline-primary btn-sm me-1">
                             ✏️ Edit
                         </a>
-                        <a href="{% url 'delete_expense' expense.id %}" class="btn btn-outline-danger btn-sm">
+                        <button class="btn btn-outline-danger btn-sm" 
+                                onclick="showDeleteModal({{ expense.id }}, '{{ expense.title }}')">
                             🗑️ Delete
-                        </a>
+                        </button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -93,19 +94,67 @@
     {% endif %}
 </div>
 
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow-sm">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Confirm Delete</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete "<span id="expenseTitle"></span>"?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let expenseToDelete = null;
+
+function showDeleteModal(expenseId, title) {
+    expenseToDelete = expenseId;
+    document.getElementById('expenseTitle').innerText = title;
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    modal.show();
+}
+
+document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+    if (!expenseToDelete) return;
+
+    fetch(`/api/expense/delete/${expenseToDelete}/`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(res => {
+        if (res.ok) {
+            document.getElementById(`expense-${expenseToDelete}`).remove();
+        } else {
+            alert("Failed to delete expense.");
+        }
+        expenseToDelete = null;
+        const modalEl = document.getElementById('deleteModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        modal.hide();
+    });
+});
+</script>
+
 <style>
-    /* Custom hover effect for table rows */
     table.table-hover tbody tr:hover {
         background-color: #f1f8ff;
         transition: 0.3s;
     }
-
-    /* Smooth gradient for summary cards */
     .bg-gradient-light {
         background: linear-gradient(135deg, #e0f7fa, #f1f8ff);
     }
-
-    /* Card icons */
     .card i {
         display: block;
     }
