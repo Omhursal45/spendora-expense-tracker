@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Add Category | Spendora{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-header bg-primary text-white text-center">
+        <h4>Add New Category</h4>
+      </div>
+      <div class="card-body p-4">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" placeholder="Enter category name" required>
+          </div>
+          <div class="mb-3">
+            <label>Color (optional)</label>
+            <input type="color" name="color" class="form-control form-control-color">
+          </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-success btn-lg">Add Category</button>
+          </div>
+        </form>
+        <div class="text-center mt-3">
+          <a href="{% url 'add_expense' %}" class="text-primary">&larr; Back to Add Expense</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

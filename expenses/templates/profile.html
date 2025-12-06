@@ -1,0 +1,305 @@
+{% extends 'base.html' %}
+{% block title %}Profile | Spendora{% endblock %}
+
+{% block content %}
+
+<style>
+  /* --------------------------------------------
+     DEFAULT LIGHT MODE
+  -------------------------------------------- */
+  body {
+    background: #f5f7fb !important;
+  }
+
+  .profile-header,
+  .metric-card {
+    background: #ffffff;
+    color: #222;
+  }
+
+  .profile-info h2 { color: #333; }
+  .profile-info p { color: #666; }
+
+  /* --------------------------------------------
+     DARK MODE — FIXED (uses body.dark-mode)
+  -------------------------------------------- */
+  body.dark-mode {
+    background: #0d1117 !important;
+    color: #e5e7eb !important;
+  }
+
+  body.dark-mode .profile-header,
+  body.dark-mode .metric-card {
+    background: #161b22 !important;
+    color: #e5e7eb !important;
+    box-shadow: 0 4px 18px rgba(255,255,255,0.05);
+    border: 1px solid #30363d !important;
+  }
+
+  body.dark-mode .profile-info h2 {
+    color: #fff !important;
+  }
+
+  body.dark-mode .profile-info p {
+    color: #d1d5db !important;
+  }
+
+  body.dark-mode .btn-outline-primary {
+    color: #93c5fd !important;
+    border-color: #93c5fd !important;
+  }
+
+  body.dark-mode .btn-outline-warning {
+    color: #facc15 !important;
+    border-color: #facc15 !important;
+  }
+
+  body.dark-mode .btn-danger {
+    color: #fff !important;
+    background: #b91c1c !important;
+  }
+
+  body.dark-mode canvas {
+    filter: brightness(1.2);
+  }
+
+  /* PAGE LAYOUT */
+  .profile-wrapper {
+    max-width: 1100px;
+    margin: 20px auto 50px auto;
+    padding: 0 15px;
+  }
+
+  /* BACK BUTTON */
+  .back-btn-wrapper { margin-bottom: 20px; }
+  .btn-back {
+    border-radius: 12px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: none;
+  }
+
+  body.dark-mode .btn-back {
+    background: linear-gradient(135deg, #312e81, #4338ca);
+    box-shadow: 0 5px 18px rgba(0,0,0,0.5);
+  }
+
+  /* PROFILE HEADER */
+  .profile-header {
+    display: flex;
+    gap: 30px;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+    flex-wrap: wrap;
+  }
+
+  .profile-avatar {
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 55px;
+    box-shadow: 0 5px 20px rgba(99,102,241,0.3);
+  }
+
+  body.dark-mode .profile-avatar {
+    background: linear-gradient(135deg, #312e81, #4338ca);
+    box-shadow: 0 5px 18px rgba(0,0,0,0.6);
+  }
+
+  .profile-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .profile-buttons .btn {
+    flex: 1 1 auto;
+    min-width: 150px;
+  }
+
+  /* CARDS */
+  .metric-card {
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+
+  .metric-value {
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+  }
+
+  @media(max-width: 768px){
+    .profile-header {
+      text-align: center;
+      justify-content: center;
+    }
+  }
+</style>
+
+<div class="profile-wrapper">
+
+  <!-- BACK BUTTON -->
+  <div class="back-btn-wrapper">
+    <button class="btn-back" onclick="goBack()">
+      <i class="bi bi-arrow-left"></i> Back
+    </button>
+  </div>
+
+  <!-- PROFILE HEADER -->
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <i class="bi bi-person-fill"></i>
+    </div>
+
+    <div class="profile-info">
+      <h2>{{ user.username }}</h2>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Total Entries:</strong> {{ total_items }}</p>
+      <p><strong>Total Categories:</strong> {{ total_categories }}</p>
+      <p><strong>Total Expense:</strong> ₹{{ total_expense }}</p>
+
+      <div class="profile-buttons">
+        <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">Edit Profile</a>
+        <a href="{% url 'change_password' %}" class="btn btn-outline-warning">Change Password</a>
+
+        <form id="logoutForm" action="{% url 'logout' %}" method="post">
+          {% csrf_token %}
+          <button type="button" class="btn btn-danger" id="logoutBtn">Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="row g-4 profile-metrics mt-4">
+    <div class="col-md-4">
+      <div class="metric-card">
+        <p>Monthly Expense</p>
+        <div class="metric-value text-warning">₹{{ monthly_expense }}</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="metric-card">
+        <p>Average Expense</p>
+        <div class="metric-value text-info">₹{{ avg_expense }}</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="metric-card">
+        <p>Max Expense</p>
+        <div class="metric-value text-success">₹{{ max_expense }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="row g-4 charts-row mt-4">
+
+    <!-- CATEGORY CHART -->
+    <div class="col-md-6">
+      <div class="metric-card">
+        <h5 class="fw-bold mb-3">Spending by Category</h5>
+        <div class="chart-container"><canvas id="categoryChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- MONTHLY CHART -->
+    <div class="col-md-6">
+      <div class="metric-card">
+        <h5 class="fw-bold mb-3">Monthly Expenses</h5>
+        <div class="chart-container"><canvas id="monthlyChart"></canvas></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Logout Popup -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.getElementById('logoutBtn').addEventListener('click', function(){
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You will be logged out!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, logout'
+    }).then((result) => {
+      if(result.isConfirmed){
+        document.getElementById('logoutForm').submit();
+      }
+    });
+  });
+
+  function goBack(){ window.history.back(); }
+</script>
+
+<!-- Charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ categories|json_script:"cat_data" }}
+{{ category_totals|json_script:"cat_totals_data" }}
+{{ months|json_script:"months_data" }}
+{{ monthly_totals|json_script:"monthly_totals_data" }}
+
+<script>
+  // CATEGORY
+  const categories = JSON.parse(document.getElementById("cat_data").textContent);
+  const totals = JSON.parse(document.getElementById("cat_totals_data").textContent);
+
+  new Chart(document.getElementById("categoryChart"), {
+    type: "doughnut",
+    data: {
+      labels: categories,
+      datasets:[{
+        data: totals,
+        backgroundColor: ["#F72585","#4ECDC4","#FFD93D","#FF6F91","#4f46e5","#FF9F1C","#2EC4B6"],
+        borderColor:"#fff",
+        borderWidth:2
+      }]
+    }
+  });
+
+  // MONTHLY
+  const months = JSON.parse(document.getElementById("months_data").textContent);
+  const monthlyTotals = JSON.parse(document.getElementById("monthly_totals_data").textContent);
+
+  new Chart(document.getElementById("monthlyChart"), {
+    type: "line",
+    data: {
+      labels: months,
+      datasets:[{
+        label:"Monthly Expenses",
+        data: monthlyTotals,
+        fill:true,
+        borderColor:"#4f46e5",
+        backgroundColor:"rgba(79,70,229,0.2)",
+        tension:0.4
+      }]
+    }
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0">
+
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Add Expense to "{{ wallet.name }}"</h3>
+                    <small class="opacity-75">Track your wallet spending easily</small>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-4">
+                    <form method="post" action="{% url 'add-wallet-expense' wallet.id %}">
+                        {% csrf_token %}
+
+                        <!-- Title Field -->
+                        <div class="mb-3">
+                            <label for="id_title" class="form-label fw-semibold">Title</label>
+                            {{ form.title|add_class:"form-control form-control-lg" }}
+                            {% for error in form.title.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Amount Field -->
+                        <div class="mb-3">
+                            <label for="id_amount" class="form-label fw-semibold">Amount (₹)</label>
+                            {{ form.amount|add_class:"form-control form-control-lg" }}
+                            {% for error in form.amount.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Category Dropdown -->
+                        <div class="mb-3">
+                            <label for="category" class="form-label fw-semibold">Category</label>
+                            <select id="category" name="category" class="form-select form-select-lg" required>
+                                <option value="" disabled selected>Select Category</option>
+                                <option value="Food">Food</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Bills">Bills</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Health">Health</option>
+                                <option value="Education">Education</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Custom Category (Hidden by default) -->
+                        <div class="mb-3" id="custom_category_div" style="display: none;">
+                            <label for="custom_category" class="form-label fw-semibold">Custom Category</label>
+                            <input type="text" id="custom_category" name="custom_category" class="form-control form-control-lg" placeholder="Enter custom category">
+                        </div>
+
+                        <!-- Date Field -->
+                        <div class="mb-3">
+                            <label for="id_date_created" class="form-label fw-semibold">Date</label>
+                            {{ form.date_created|add_class:"form-control form-control-lg" }}
+                            {% for error in form.date_created.errors %}
+                                <div class="text-danger small mt-1">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex flex-column flex-sm-row justify-content-between gap-2 mt-4">
+                            <a href="{% url 'wallet-detail' wallet.id %}" class="btn btn-outline-secondary w-100 w-sm-auto">Cancel</a>
+                            <button type="submit" class="btn btn-primary w-100 w-sm-auto">Add Expense</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JS for Custom Category -->
+<script>
+    const categorySelect = document.getElementById('category');
+    const customDiv = document.getElementById('custom_category_div');
+    const customInput = document.getElementById('custom_category');
+
+    categorySelect.addEventListener('change', function() {
+        if (this.value === 'Other') {
+            customDiv.style.display = 'block';
+            customInput.required = true;
+        } else {
+            customDiv.style.display = 'none';
+            customInput.value = '';
+            customInput.required = false;
+        }
+    });
+</script>
+{% endblock %}

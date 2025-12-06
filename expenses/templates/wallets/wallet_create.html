@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Wallet - Spendora{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <h1 class="page-title mb-4 text-center">Create Wallet</h1>
+
+  <div class="row g-4">
+
+    <!-- Wallet Form -->
+    <div class="col-lg-6">
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success py-2 px-3 mb-2">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <div class="glass-card p-4 rounded shadow-sm">
+        <form method="POST">
+          {% csrf_token %}
+
+          <!-- Wallet Name -->
+          <label for="name" class="form-label fw-semibold">Wallet Name</label>
+          <input type="text" name="name" id="name" class="form-control mb-4"
+                 placeholder="Enter wallet name" required>
+
+          <!-- Select Members -->
+          <label class="form-label fw-semibold">Add Members</label>
+          <div class="checkbox-grid mb-4">
+            {% for user in users %}
+              <div class="form-check custom-check">
+                <input class="form-check-input" type="checkbox" name="members"
+                       value="{{ user.id }}" id="user{{ user.id }}">
+                <label class="form-check-label" for="user{{ user.id }}">
+                  {{ user.username }}
+                </label>
+              </div>
+            {% empty %}
+              <p class="text-muted">No other users found.</p>
+            {% endfor %}
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Create Wallet</button>
+        </form>
+
+        <a href="{% url 'wallet-list' %}" class="btn btn-outline-secondary w-100">
+          <i class="bi bi-arrow-left"></i> Back to Wallet List
+        </a>
+      </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="col-lg-6">
+      <div class="glass-card p-4 rounded shadow-sm">
+
+        <h3 class="tips-title mb-2">💡 Tips for Using Wallets</h3>
+        <p class="text-muted mb-4">Click a tip to expand it for more details.</p>
+
+        <div class="accordion" id="walletTips">
+
+          <!-- Tip 1 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="tipOne">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                🔹 Create wallets for groups, events, or personal budgeting
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#walletTips">
+              <div class="accordion-body">
+                Make separate wallets for trips, birthdays, or personal management to keep expenses organized.
+              </div>
+            </div>
+          </div>
+
+          <!-- Tip 2 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="tipTwo">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                🔹 Track spending by category
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#walletTips">
+              <div class="accordion-body">
+                Categorize expenses as food, travel, bills — this helps analyze spending better.
+              </div>
+            </div>
+          </div>
+
+          <!-- Tip 3 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="tipThree">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                🔹 Share wallets with friends or family
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#walletTips">
+              <div class="accordion-body">
+                Add members and manage shared expenses with groups effortlessly.
+              </div>
+            </div>
+          </div>
+
+          <!-- Tip 4 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="tipFour">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                🔹 Get smart analytics and insights
+              </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#walletTips">
+              <div class="accordion-body">
+                View trends and analytics to understand your spending behavior.
+              </div>
+            </div>
+          </div>
+
+          <!-- Tip 5 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="tipFive">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                🔹 Set limits and reminders
+              </button>
+            </h2>
+            <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#walletTips">
+              <div class="accordion-body">
+                Set spending limits for categories and reminders for upcoming bills or shared expenses.
+              </div>
+            </div>
+          </div>
+
+          <!-- Tip 6 -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="tipSix">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                🔹 Backup your wallet data
+              </button>
+            </h2>
+            <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#walletTips">
+              <div class="accordion-body">
+                Regularly backup your wallet data to prevent data loss in case of device failure.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+
+/* Glass Card */
+.glass-card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+body.dark-mode .glass-card {
+  background: rgba(0,0,0,0.5);
+  border-color: rgba(255,255,255,0.2);
+}
+
+/* Page Title */
+.page-title {
+  color: var(--primary, #2f81f7);
+  font-weight: 700;
+}
+
+/* Custom Checkboxes */
+.custom-check {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.1);
+  margin-bottom: 8px;
+  background: rgba(255,255,255,0.05);
+  transition: all 0.2s;
+}
+.custom-check:hover {
+  background: rgba(255,255,255,0.15);
+}
+body.dark-mode .custom-check {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.2);
+}
+.custom-check input:checked + label {
+  font-weight: 600;
+  color: var(--primary, #2f81f7);
+}
+
+/* Accordion Headers */
+.accordion-button {
+  background: rgba(255,255,255,0.9);
+  color: #222;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+.accordion-button:not(.collapsed) {
+  background: rgba(47,129,247,0.1);
+  color: var(--primary, #2f81f7);
+}
+
+/* Dark mode accordion headers */
+body.dark-mode .accordion-button {
+  background: rgba(50,50,50,0.8);
+  color: #f0f0f0;
+}
+body.dark-mode .accordion-button:not(.collapsed) {
+  background: rgba(47,129,247,0.3);
+  color: #ffffff;
+}
+
+/* Accordion Body (Tip Content) */
+.accordion-body {
+  background: rgba(255,255,255,0.95);
+  color: #222;
+  font-size: 0.95rem;
+}
+body.dark-mode .accordion-body {
+  background: rgba(30,30,30,0.8);
+  color: #f0f0f0;
+}
+
+/* Tips Title */
+.tips-title {
+  color: var(--primary, #2f81f7);
+  font-weight: 600;
+}
+</style>
+
+{% endblock %}

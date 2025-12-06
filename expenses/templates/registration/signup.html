@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Change Password | Spendora{% endblock %}
+{% block content %}
+
+<div class="container-fluid p-0">
+  <div class="row g-0 min-vh-100">
+
+    <!-- LEFT SIDE (FORM) -->
+    <div class="col-md-5 d-flex align-items-center justify-content-center left-side p-4">
+
+      <div class="card shadow p-4 animate__animated animate__fadeIn change-pass-card">
+
+        <h2 class="fw-bold text-center mb-2 text-success">Change Password</h2>
+        <p class="text-center text-muted mb-4">Update your account password</p>
+
+        <form method="POST" novalidate>
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Old Password</label>
+            <input type="password" name="old_password"
+                   class="form-control modern-input"
+                   placeholder="Enter old password" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">New Password</label>
+            <input type="password" name="new_password1"
+                   class="form-control modern-input"
+                   placeholder="Enter new password" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Confirm New Password</label>
+            <input type="password" name="new_password2"
+                   class="form-control modern-input"
+                   placeholder="Confirm new password" required>
+          </div>
+
+          <button class="btn btn-success w-100 py-2 fw-bold modern-btn">
+            Update Password
+          </button>
+        </form>
+
+        <p class="text-center mt-3">
+          <a href="{% url 'profile' %}" class="fw-semibold text-success text-decoration-none">
+            <i class="bi bi-arrow-left"></i> Back to Profile
+          </a>
+        </p>
+
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE (IMAGE) -->
+    <div class="col-md-7 d-none d-md-block p-0">
+      <img src="{% static 'images/expense.jpg' %}"
+           class="img-fluid change-pass-img">
+    </div>
+
+  </div>
+</div>
+
+<!-- SweetAlert for messages -->
+{% if messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  {% for message in messages %}
+  Swal.fire({
+      title: "{{ message.tags|capfirst }}",
+      text: "{{ message|escapejs }}",
+      icon: "{{ message.tags }}",
+      timer: 2000,
+      showConfirmButton: false,
+  }).then(function(){
+      {% if message.tags == "success" %}
+      window.location.href = "{% url 'profile' %}";
+      {% endif %}
+  });
+  {% endfor %}
+});
+</script>
+{% endif %}
+
+<!-- Extra Styles -->
+<style>
+/* ======================= LIGHT MODE ======================= */
+.left-side {
+  background-color: #f8fafc;
+}
+.change-pass-card {
+  width: 350px;
+  border-radius: 1rem;
+  background: #ffffffee;
+}
+.modern-input {
+  height: 42px;
+  border-radius: 0.6rem;
+  border: 1.5px solid #d1d5db;
+  transition: 0.25s;
+  background-color: #ffffff;
+  color: #1f2937;
+}
+.modern-input:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 6px rgba(22,163,74,0.25);
+}
+.modern-btn {
+  border-radius: 0.6rem;
+}
+.change-pass-img {
+  height: 100vh;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: filter 0.3s ease;
+}
+
+/* ======================= DARK MODE ======================= */
+body.dark-mode .left-side {
+  background-color: #121212;
+}
+body.dark-mode .change-pass-card {
+  background-color: #1f1f1f;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+body.dark-mode .modern-input {
+  border-color: #4b5563;
+  background-color: #1f1f1f;
+  color: #e5e7eb;
+}
+body.dark-mode .modern-input:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 6px rgba(22,163,74,0.5);
+}
+body.dark-mode .text-muted {
+  color: #9ca3af !important;
+}
+body.dark-mode .text-success {
+  color: #16a34a !important;
+}
+body.dark-mode .change-pass-img {
+  filter: brightness(0.7);
+}
+body.dark-mode a.text-success {
+  color: #16a34a !important;
+}
+
+/* ======================= RESPONSIVE ======================= */
+@media (max-width: 768px) {
+  .left-side {
+    min-height: 70vh;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+
+<!-- Animation -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+{% endblock %}

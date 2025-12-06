@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% block title %}Your Expenses{% endblock %}
+
+{% block content %}
+
+<div class="container my-4">
+
+    <!-- Back Button -->
+    <div class="d-flex mb-3">
+        <button class="btn btn-back" onclick="goBack()">
+            <i class="bi bi-arrow-left"></i> Back
+        </button>
+    </div>
+
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+        <h2 class="fw-bold text-primary text-center text-md-start">💼 Your Expenses Dashboard</h2>
+
+        <a href="{% url 'add_expense' %}" class="btn btn-success btn-lg shadow-sm w-100 w-md-auto text-center">
+            ➕ Add New Expense
+        </a>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-4">
+            <div class="card shadow border-0 rounded-4 p-3 bg-gradient-light h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Total Expenses</h6>
+                    <h3 class="fw-bold text-primary">₹{{ total_expenses }}</h3>
+                    <i class="bi bi-wallet2 fs-1 text-primary mt-2"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card shadow border-0 rounded-4 p-3 bg-gradient-light h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Average Expense</h6>
+                    <h3 class="fw-bold text-success">₹{{ avg_expense }}</h3>
+                    <i class="bi bi-calculator fs-1 text-success mt-2"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <div class="card shadow border-0 rounded-4 p-3 bg-gradient-light h-100">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Highest Expense</h6>
+                    <h3 class="fw-bold text-danger">₹{{ max_expense }}</h3>
+                    <i class="bi bi-currency-exchange fs-1 text-danger mt-2"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expense Table -->
+    {% if expenses %}
+    <div class="table-responsive shadow-sm rounded-4 overflow-hidden">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th class="d-none d-md-table-cell">Category</th>
+                    <th>Amount</th>
+                    <th class="d-none d-md-table-cell">Date</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for expense in expenses %}
+                <tr id="expense-{{ expense.id }}">
+                    <td>{{ forloop.counter }}</td>
+                    <td class="fw-semibold">{{ expense.title }}</td>
+                    <td class="d-none d-md-table-cell">
+                        <span class="badge rounded-pill bg-info text-dark px-3 py-2">
+                            {{ expense.category }}
+                        </span>
+                    </td>
+                    <td class="fw-semibold text-success">₹{{ expense.amount }}</td>
+                    <td class="d-none d-md-table-cell">
+                        <span class="badge bg-light text-dark border">
+                            {{ expense.date_created|date:"d M Y" }}
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <a href="{% url 'edit_expense' expense.id %}" class="btn btn-sm btn-outline-primary me-1">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <button class="btn btn-sm btn-outline-danger"
+                                onclick="showDeleteModal({{ expense.id }}, '{{ expense.title }}')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+        <div class="alert alert-info text-center shadow-sm rounded-4 py-4 mt-4">
+            No expenses added yet. 
+            <a href="{% url 'add_expense' %}" class="fw-bold text-decoration-none">Add your first expense!</a>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow-sm">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Delete Expense</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">Are you sure you want to delete "<span id="expenseTitle"></span>"?</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let expenseToDelete = null;
+
+function showDeleteModal(id, title) {
+    expenseToDelete = id;
+    document.getElementById("expenseTitle").innerText = title;
+    new bootstrap.Modal(document.getElementById("deleteModal")).show();
+}
+
+document.getElementById("confirmDeleteBtn").addEventListener("click", () => {
+    fetch(`/delete-expense/${expenseToDelete}/`, {
+        method: "DELETE",
+        headers: { "X-CSRFToken": "{{ csrf_token }}" }
+    }).then(res => {
+        if (res.ok) {
+            document.getElementById(`expense-${expenseToDelete}`).remove();
+        }
+        bootstrap.Modal.getInstance(document.getElementById("deleteModal")).hide();
+    });
+});
+
+function goBack() { window.history.back(); }
+</script>
+
+<style>
+/* Back Button */
+.btn-back {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+.btn-back:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+/* Cards */
+.bg-gradient-light {
+    background: linear-gradient(135deg, #e0f7fa, #f1f8ff);
+}
+
+/* Table Hover */
+.table-hover tbody tr:hover {
+    background-color: #f3faff;
+}
+
+/* Responsive padding fixes */
+@media (max-width: 768px) {
+    .btn-lg {
+        font-size: 1rem;
+        padding: 10px;
+    }
+}
+
+/* DARK MODE SUPPORT */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1e1e2f;
+        color: #e5e7eb;
+    }
+    h2, h6, .fw-bold { color: #f3f4f6; }
+    .text-primary { color: #6366f1 !important; }
+    .text-success { color: #34d399 !important; }
+    .text-danger { color: #f87171 !important; }
+    .text-muted, .text-dark { color: #9ca3af !important; }
+
+    .card {
+        background-color: #2a2a3d !important;
+        color: #e5e7eb;
+    }
+
+    .badge {
+        background-color: #4b5563 !important;
+        color: #e5e7eb !important;
+    }
+
+    .table-dark {
+        background-color: #1f2937 !important;
+        color: #e5e7eb;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #374151 !important;
+    }
+
+    .alert-info {
+        background-color: #374151 !important;
+        color: #e5e7eb !important;
+        border: none;
+    }
+
+    .btn-outline-primary {
+        color: #6366f1;
+        border-color: #6366f1;
+    }
+    .btn-outline-primary:hover {
+        background-color: #6366f1;
+        color: white;
+    }
+
+    .btn-outline-danger {
+        color: #f87171;
+        border-color: #f87171;
+    }
+    .btn-outline-danger:hover {
+        background-color: #f87171;
+        color: white;
+    }
+}
+</style>
+
+{% endblock %}

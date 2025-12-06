@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block title %}Wallet Help{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <!-- Page Title -->
+    <h2 class="mb-3 page-title text-center">💡 Wallet Help & Tips</h2>
+
+    <!-- Description -->
+    <p class="tips-subtext text-center mb-5">
+        Learn how to make the most of your wallets in Spendora. Follow these tips to manage your finances efficiently and collaborate with others.
+    </p>
+
+    <!-- Accordion Container -->
+    <div class="accordion" id="walletHelpAccordion">
+
+        <!-- Tip 1 -->
+        <div class="accordion-item glass-card mb-3">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                    <span class="tip-icon">👜</span> Create wallets for groups, events, or personal budgeting
+                </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#walletHelpAccordion">
+                <div class="accordion-body">
+                    You can create multiple wallets for different purposes:
+                    <ul>
+                        <li>Birthday fund</li>
+                        <li>Vacation savings</li>
+                        <li>Household budgeting</li>
+                        <li>Personal expenses</li>
+                    </ul>
+                    Organizing wallets separately helps you track money clearly.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tip 2 -->
+        <div class="accordion-item glass-card mb-3">
+            <h2 class="accordion-header" id="headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                    <span class="tip-icon">📊</span> Track spending by category
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#walletHelpAccordion">
+                <div class="accordion-body">
+                    Categorize your expenses to analyze spending patterns:
+                    <ul>
+                        <li>Food & Dining</li>
+                        <li>Travel & Transport</li>
+                        <li>Bills & Utilities</li>
+                        <li>Entertainment</li>
+                        <li>Shopping & Miscellaneous</li>
+                    </ul>
+                    Helps you identify areas to save and plan your budget effectively.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tip 3 -->
+        <div class="accordion-item glass-card mb-3">
+            <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                    <span class="tip-icon">👥</span> Share wallets with friends or family
+                </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#walletHelpAccordion">
+                <div class="accordion-body">
+                    Collaborate on shared expenses by adding members:
+                    <ul>
+                        <li>Group trips</li>
+                        <li>Household bills</li>
+                        <li>Event planning</li>
+                    </ul>
+                    Everyone can contribute and track expenses in real-time.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tip 4 -->
+        <div class="accordion-item glass-card mb-3">
+            <h2 class="accordion-header" id="headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                    <span class="tip-icon">📈</span> Get smart analytics and insights
+                </button>
+            </h2>
+            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#walletHelpAccordion">
+                <div class="accordion-body">
+                    Spendora provides detailed analytics:
+                    <ul>
+                        <li>Monthly spending trends</li>
+                        <li>Category-wise breakdown</li>
+                        <li>Top spending alerts</li>
+                        <li>Suggestions to save money</li>
+                    </ul>
+                    Use insights to make informed financial decisions.
+                </div>
+            </div>
+        </div>
+
+        <!-- Tip 5 -->
+        <div class="accordion-item glass-card mb-3">
+            <h2 class="accordion-header" id="headingFive">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                    <span class="tip-icon">⏰</span> Set budgets and reminders
+                </button>
+            </h2>
+            <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#walletHelpAccordion">
+                <div class="accordion-body">
+                    Control your spending by:
+                    <ul>
+                        <li>Setting monthly or category budgets</li>
+                        <li>Receiving notifications when you approach limits</li>
+                        <li>Avoiding overspending and saving money effectively</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Back Button -->
+    <div class="mt-5 text-center">
+        <a href="{% url 'wallet-list' %}" class="btn btn-lg btn-outline-primary">
+            <i class="bi bi-arrow-left"></i> Back to Wallet List
+        </a>
+    </div>
+
+</div>
+
+<style>
+/* Page Title & Subtext */
+.page-title {
+    color: var(--primary, #2f81f7);
+    font-weight: 700;
+    font-size: 2rem;
+}
+.tips-subtext {
+    color: #6b7280;
+    font-size: 1.1rem;
+}
+
+/* Glass Card Accordion */
+.glass-card {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.glass-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+/* Accordion */
+.accordion-button {
+    font-weight: 500;
+    font-size: 1.05rem;
+    background: rgba(255,255,255,0.1);
+    color: #1f2937;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    margin-bottom: 5px;
+}
+.accordion-button:not(.collapsed) {
+    background: rgba(47,129,247,0.18);
+    color: #1f2937;
+}
+.accordion-body {
+    background: rgba(255,255,255,0.05);
+    color: #1f2937;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 0.95rem;
+}
+.tip-icon {
+    margin-right: 10px;
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background-color: #121212;
+    color: #e5e7eb;
+}
+body.dark-mode .accordion-button {
+    background-color: #1f1f1f;
+    color: #e5e7eb;
+}
+body.dark-mode .accordion-button:not(.collapsed) {
+    background-color: #2c2c2c;
+    color: #ffffff;
+}
+body.dark-mode .accordion-body {
+    background-color: #2c2c2c;
+    color: #e5e7eb;
+}
+body.dark-mode .glass-card {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.2);
+    box-shadow: 0 4px 15px rgba(255,255,255,0.05);
+}
+
+/* Buttons */
+.btn-outline-primary {
+    color: #4f46e5;
+    border-color: #4f46e5;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.btn-outline-primary:hover {
+    background-color: #4f46e5;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* List styling inside accordion */
+.accordion-body ul {
+    margin-left: 20px;
+    list-style-type: disc;
+}
+.accordion-body li {
+    margin-bottom: 5px;
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid p-0">
+  <div class="row g-0">
+
+    <!-- LEFT SIDE -->
+    <div class="col-md-5 d-flex align-items-center justify-content-center left-side">
+      <div class="w-75">
+
+        <h2 class="text-center mb-2 fw-bold">Welcome Back 👋</h2>
+        <p class="text-center text-muted mb-4">Login to continue</p>
+
+        <!-- Login Form -->
+        <form method="POST" action="{% url 'login' %}" class="shadow p-4 rounded-4 login-form">
+          {% csrf_token %}
+
+          {% if form.errors %}
+          <div class="alert alert-danger text-center py-2">
+            Invalid username or password
+          </div>
+          {% endif %}
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Username</label>
+            <input type="text" name="username" class="form-control modern-input" required>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label fw-semibold">Password</label>
+            <input type="password" name="password" class="form-control modern-input" required>
+          </div>
+
+          <p class="text-end mb-3">
+            <a href="{% url 'forgot_password' %}" class="text-primary fw-semibold small-link">
+              Forgot password?
+            </a>
+          </p>
+
+          <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold rounded-3">
+            Login
+          </button>
+
+          <p class="mt-3 text-center">
+            Don’t have an account?
+            <a href="{% url 'signup' %}" class="fw-semibold text-primary">Sign up</a>
+          </p>
+
+        </form>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE IMAGE -->
+    <div class="col-md-7 d-none d-md-block p-0">
+      <img src="{% static 'images/expense4.jpg' %}"
+           class="img-fluid login-image">
+    </div>
+
+  </div>
+</div>
+
+<style>
+  
+/*  LIGHT MODE  */
+.left-side {
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+.login-form {
+  background-color: #f8f9fa;
+}
+
+.modern-input {
+  border: 2px solid #dde3ea;
+  padding: 12px;
+  border-radius: 10px;
+  transition: 0.2s ease-in-out;
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+.modern-input:focus {
+  border-color: #6a5acd;
+  box-shadow: 0 0 5px rgba(106, 90, 205, 0.3);
+}
+
+.small-link {
+  font-size: 14px;
+}
+
+/* DARK MODE  */
+body.dark-mode .left-side {
+  background-color: #1e1e1e;
+}
+
+body.dark-mode .login-form {
+  background-color: #2c2c2c;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .modern-input {
+  border-color: #4b5563;
+  background-color: #1f1f1f;
+  color: #e5e7eb;
+}
+
+body.dark-mode .modern-input:focus {
+  border-color: #7c3aed;
+  box-shadow: 0 0 5px rgba(124, 58, 237, 0.5);
+}
+
+body.dark-mode .text-muted {
+  color: #9ca3af !important;
+}
+
+body.dark-mode .text-primary {
+  color: #8b5cf6 !important;
+}
+
+body.dark-mode .small-link {
+  color: #93c5fd !important;
+}
+
+body.dark-mode .btn-primary {
+  background-color: #7c3aed;
+  border-color: #7c3aed;
+}
+
+body.dark-mode .btn-primary:hover {
+  background-color: #a78bfa;
+  border-color: #a78bfa;
+}
+
+body.dark-mode .login-image {
+  filter: brightness(0.7);
+}
+
+/* IMAGE  */
+.login-image {
+  height: 100vh;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: filter 0.3s ease;
+}
+
+/* RESPONSIVE  */
+@media (max-width: 768px) {
+  .left-side {
+    min-height: 70vh;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+}
+</style>
+
+{% endblock %}

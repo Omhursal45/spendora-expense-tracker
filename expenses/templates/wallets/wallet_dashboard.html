@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <!-- Wallet Header -->
+    <h2 class="fw-bold">{{ wallet.name }}</h2>
+    <p class="text-muted">Created by: {{ wallet.created_by.username }}</p>
+
+    <hr>
+
+    <!-- Wallet Summary -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Total Expenses</h5>
+                    <p class="card-text fs-4">₹{{ total_expense }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Number of Members</h5>
+                    <p class="card-text fs-4">{{ wallet.members.count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Categories</h5>
+                    <p class="card-text fs-4">{{ categories|length }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Member Contributions -->
+    <h4 class="fw-semibold">Member Contributions</h4>
+    <table class="table table-bordered mb-4">
+        <thead class="table-dark">
+            <tr>
+                <th>Member</th>
+                <th>Total Spent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member, amount in member_contrib %}
+            <tr>
+                <td>{{ member }}</td>
+                <td>₹{{ amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Category-wise Expenses -->
+    <h4 class="fw-semibold">Category-wise Expenses</h4>
+    <table class="table table-bordered mb-4">
+        <thead class="table-dark">
+            <tr>
+                <th>Category</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cat, total in categories|zip:category_totals %}
+            <tr>
+                <td>{{ cat }}</td>
+                <td>₹{{ total }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Recent Expenses -->
+    <div class="d-flex justify-content-between align-items-center">
+        <h4 class="fw-semibold">Recent Expenses</h4>
+        <a href="{% url 'add-wallet-expense' wallet.id %}" class="btn btn-primary">+ Add Expense</a>
+    </div>
+
+    {% if expenses %}
+        <table class="table table-bordered mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Title</th>
+                    <th>Amount</th>
+                    <th>Category</th>
+                    <th>Added By</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in expenses %}
+                <tr>
+                    <td>{{ e.title }}</td>
+                    <td>₹{{ e.amount }}</td>
+                    <td>{{ e.category }}</td>
+                    <td>{{ e.user.username }}</td>
+                    <td>{{ e.date_created|date:"M d, Y" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted mt-3">No expenses added yet.</p>
+    {% endif %}
+
+</div>
+{% endblock %}
