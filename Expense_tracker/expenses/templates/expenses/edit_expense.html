@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Edit Expense</h2>
+    <div class="card shadow p-4 mx-auto" style="max-width: 500px;">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100 mt-3">Save Changes</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

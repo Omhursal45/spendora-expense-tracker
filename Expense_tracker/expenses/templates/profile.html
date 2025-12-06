@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% block title %}Profile | Spendora{% endblock %}
+
+{% block content %}
+<style>
+  body { background: #f5f7fb; }
+
+  .profile-wrapper { max-width: 1100px; margin: 50px auto; }
+
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+  }
+
+  .profile-avatar {
+    height: 120px;
+    width: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 55px;
+    flex-shrink: 0;
+    box-shadow: 0 5px 20px rgba(99,102,241,0.3);
+  }
+
+  .profile-info h2 { margin: 0; font-weight: 700; color: #333; }
+  .profile-info p { margin: 5px 0; color: #666; }
+
+  .profile-metrics { margin-top: 30px; }
+  .metric-card { border-radius: 14px; padding: 20px; background: #ffffff; box-shadow: 0 4px 18px rgba(0,0,0,0.08); text-align: center; }
+  .metric-value { font-size: 28px; font-weight: 700; margin-top: 8px; }
+
+  .charts-row { margin-top: 40px; }
+  .chart-container { position: relative; width: 100%; min-height: 300px; margin-top: 20px; }
+</style>
+
+<div class="profile-wrapper">
+
+  <!-- PROFILE HEADER -->
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <i class="bi bi-person-fill"></i>
+    </div>
+    <div class="profile-info">
+      <h2>{{ user.username }}</h2>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Total Entries:</strong> {{ total_items }}</p>
+      <p><strong>Total Categories:</strong> {{ total_categories }}</p>
+      <p><strong>Total Expense:</strong> ₹{{ total_expense }}</p>
+      <div class="mt-3">
+        <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary me-2">Edit Profile</a>
+        <a href="{% url 'change_password' %}" class="btn btn-outline-warning me-2">Change Password</a>
+
+        <!-- Logout Form -->
+        <form id="logoutForm" action="{% url 'logout' %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="button" class="btn btn-danger" id="logoutBtn">Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS CARDS -->
+  <div class="row g-4 profile-metrics">
+    <div class="col-md-4">
+      <div class="metric-card">
+        <p>Monthly Expense</p>
+        <div class="metric-value text-warning">₹{{ monthly_expense }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="metric-card">
+        <p>Average Expense</p>
+        <div class="metric-value text-info">₹{{ avg_expense }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="metric-card">
+        <p>Max Expense</p>
+        <div class="metric-value text-success">₹{{ max_expense }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="row g-4 charts-row">
+    <div class="col-md-6">
+      <div class="metric-card">
+        <h5 class="fw-bold mb-3">Spending by Category</h5>
+        <div class="chart-container">
+          <canvas id="categoryChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="metric-card">
+        <h5 class="fw-bold mb-3">Monthly Expenses</h5>
+        <div class="chart-container">
+          <canvas id="monthlyChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.getElementById('logoutBtn').addEventListener('click', function(){
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You will be logged out!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, logout'
+    }).then((result) => {
+      if(result.isConfirmed){
+        document.getElementById('logoutForm').submit();
+      }
+    });
+  });
+</script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ categories|json_script:"cat_data" }}
+{{ category_totals|json_script:"cat_totals_data" }}
+{{ months|json_script:"months_data" }}
+{{ monthly_totals|json_script:"monthly_totals_data" }}
+
+<script>
+  const categories = JSON.parse(document.getElementById("cat_data").textContent);
+  const categoryTotals = JSON.parse(document.getElementById("cat_totals_data").textContent);
+  const categoryColors = ["#F72585","#4ECDC4","#FFD93D","#FF6F91","#4f46e5","#FF9F1C","#2EC4B6","#8D99AE","#FF6B6B","#6A0572"];
+  const colors = categories.map((_, i) => categoryColors[i % categoryColors.length]);
+
+  new Chart(document.getElementById("categoryChart"), {
+    type: "doughnut",
+    data: { labels: categories, datasets:[{ data: categoryTotals, backgroundColor: colors, borderColor:"#fff", borderWidth:2 }]},
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{position:'bottom'} } }
+  });
+
+  const months = JSON.parse(document.getElementById("months_data").textContent);
+  const monthlyTotals = JSON.parse(document.getElementById("monthly_totals_data").textContent);
+
+  new Chart(document.getElementById("monthlyChart"), {
+    type: "line",
+    data: { labels: months, datasets:[{
+      label:"Monthly Expenses",
+      data: monthlyTotals,
+      fill:true,
+      borderColor:"#4f46e5",
+      backgroundColor:"rgba(79,70,229,0.2)",
+      tension:0.4,
+      pointBackgroundColor:"#4f46e5",
+      pointRadius:5
+    }]},
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} } }
+  });
+</script>
+{% endblock %}
