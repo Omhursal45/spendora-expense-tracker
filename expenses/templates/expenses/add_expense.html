@@ -5,7 +5,7 @@
 
 {% block content %}
 <style>
-/* 🌟 THEME VARIABLES */
+/* THEME VARIABLES */
 :root {
     --bg-color: #f5f7fb;
     --card-bg: #ffffff;
@@ -32,7 +32,7 @@ body.dark-mode {
     --tip-bg: linear-gradient(135deg,#6366f1,#4f46e5);
 }
 
-/* 🌟 GLOBAL */
+/* GLOBAL */
 body {
     background: var(--bg-color);
     color: var(--text-color);
@@ -40,7 +40,7 @@ body {
 }
 .text-muted { color: var(--text-muted) !important; }
 
-/* 🌟 FLEX CONTAINER */
+/* FLEX CONTAINER */
 .container-flex { display: flex; gap: 30px; flex-wrap: wrap; }
 .left-panel, .right-panel { 
     background: var(--card-bg); 
@@ -51,7 +51,7 @@ body {
 .left-panel { flex: 1 1 450px; }
 .right-panel { flex: 1 1 350px; display: flex; flex-direction: column; gap: 20px; }
 
-/* 🌟 METRIC CARDS */
+/* METRIC CARDS */
 .metric-card { 
     border-radius: 14px; 
     padding: 20px; 
@@ -62,14 +62,14 @@ body {
 body.dark-mode .metric-card { background: #3a3a50; }
 .metric-value { font-size: 24px; font-weight: 700; margin-top: 5px; }
 
-/* 🌟 CHART CONTAINER */
+/* CHART CONTAINER */
 .chart-container { position: relative; width: 100%; min-height: 200px; }
 
-/* 🌟 TOP CATEGORIES */
+/* TOP CATEGORIES */
 ul.top-categories { list-style:none; padding:0; margin:0; }
 ul.top-categories li { display:flex; justify-content: space-between; margin-bottom: 8px; font-weight:600; }
 
-/* 🌟 TIP CARD */
+/* TIP CARD */
 .tip-card { 
     padding:20px; 
     border-radius:16px; 
@@ -79,7 +79,7 @@ ul.top-categories li { display:flex; justify-content: space-between; margin-bott
     font-size:14px;
 }
 
-/* 🌟 BUTTONS */
+/*  BUTTONS */
 button.btn-lg { width:100%; font-size:18px; }
 .form-select, .form-control {
     border-radius: 12px;
@@ -96,7 +96,7 @@ body.dark-mode .form-select {
     color: var(--text-color);
 }
 
-/* 🌟 BACK BUTTON */
+/*  BACK BUTTON */
 .btn-back {
     display: inline-flex;
     align-items: center;
