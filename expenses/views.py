@@ -222,6 +222,20 @@ def signup(request):
     # -----------------------------
     return render(request, "signup.html")
 
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+
+        if user:
+            login(request, user)
+            return redirect('dashboard')
+        else:
+            messages.error(request, "Invalid username or password!")
+
+    return render(request, "registration/login.html")
+
 @never_cache
 @login_required
 def logout_view(request):
