@@ -165,15 +165,12 @@ def signup(request):
         if not all([username, email, password1, password2]):
             messages.error(request, "All fields are required.")
             return redirect('signup')
-
         if password1 != password2:
             messages.error(request, "Passwords do not match.")
             return redirect('signup')
-
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists.")
             return redirect('signup')
-
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already exists.")
             return redirect('signup')
@@ -182,29 +179,15 @@ def signup(request):
         user = User.objects.create_user(username=username, email=email, password=password1)
         user.save()
 
-        # --------------------------
-        # Send Welcome Email
-        # --------------------------
-        subject = "🎉 Welcome to Spendora — Smart Expense Tracker!"
-        from_email = settings.EMAIL_HOST_USER
-        to = [email]
+        messages.success(request, "Account created successfully! Please log in.")
 
-        html_content = render_to_string("emails/welcome_email.html", {"username": username})
-        text_content = strip_tags(html_content)
+        # 🔹 REMOVE email sending on Render
+        # if you want, you can check if DEBUG or RENDER to send only locally
 
-        try:
-            msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-            msg.attach_alternative(html_content, "text/html")
-            msg.send()
+        return redirect('login')
 
-            messages.success(request, "Account created successfully! Check your inbox 💌")
-        except Exception as e:
-            messages.warning(request, f"Account created, but email couldn't be sent ({e})")
-
-        return redirect('login')  # redirect here
-
-    # GET request → show signup page
     return render(request, "signup.html")
+
 
 def login_view(request):
     if request.method == "POST":
