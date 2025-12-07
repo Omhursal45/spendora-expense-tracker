@@ -160,6 +160,15 @@ def home(request):
 
 
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+import os
+
 def signup(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -167,32 +176,37 @@ def signup(request):
         password1 = request.POST.get("password1")
         password2 = request.POST.get("password2")
 
-        # Validation
+        # -----------------------------
+        # VALIDATION
+        # -----------------------------
         if not all([username, email, password1, password2]):
             messages.error(request, "All fields are required.")
             return redirect('signup')
+
         if password1 != password2:
             messages.error(request, "Passwords do not match.")
             return redirect('signup')
+
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists.")
             return redirect('signup')
+
         if User.objects.filter(email=email).exists():
             messages.error(request, "Email already exists.")
             return redirect('signup')
 
-        # Create user
+        # -----------------------------
+        # CREATE USER
+        # -----------------------------
         user = User.objects.create_user(username=username, email=email, password=password1)
         user.save()
 
-        # ✅ Only attempt sending email if not on Render
-        if settings.DEBUG:
+        # -----------------------------
+        # SEND EMAIL (only locally)
+        # -----------------------------
+        if os.environ.get("RENDER") != "true":
             try:
-                from django.core.mail import EmailMultiAlternatives
-                from django.template.loader import render_to_string
-                from django.utils.html import strip_tags
-
-                subject = "🎉 Welcome to Spendora!"
+                subject = "🎉 Welcome to Spendora — Smart Expense Tracker!"
                 from_email = settings.EMAIL_HOST_USER
                 to = [email]
 
@@ -202,16 +216,23 @@ def signup(request):
                 msg = EmailMultiAlternatives(subject, text_content, from_email, to)
                 msg.attach_alternative(html_content, "text/html")
                 msg.send()
-            except Exception as e:
-                print("Email not sent:", e)
-        else:
-            # On Render, just log instead of sending
-            print(f"User {username} signed up. Email sending skipped on Render.")
 
+                messages.success(request, "Account created successfully! Check your inbox 💌")
+            except Exception as e:
+                messages.warning(request, f"Account created, but email couldn't be sent ({e})")
+        else:
+            # On Render, skip sending email
+            print(f"Signup successful for {username}, email skipped on Render.")
+
+        # -----------------------------
+        # REDIRECT TO LOGIN
+        # -----------------------------
         messages.success(request, "Account created successfully! Please log in.")
         return redirect('login')
 
+    # GET request — render signup page
     return render(request, "signup.html")
+
 
 
 
