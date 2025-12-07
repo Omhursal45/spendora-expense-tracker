@@ -5,7 +5,7 @@
 
 <style>
 :root {
-    /* 🌟 LIGHT THEME COLORS */
+    /* LIGHT THEME COLORS */
     --bg-color: #f6f7fb;
     --header-bg: linear-gradient(135deg, #4f46e5, #6366f1);
     --card-bg: #ffffff;
@@ -20,7 +20,7 @@
 }
 
 body.dark-mode {
-    /* 🌙 DARK THEME COLORS */
+    /*  DARK THEME COLORS */
     --bg-color: #1e1e2f;
     --header-bg: linear-gradient(135deg, #6366f1, #4f46e5);
     --card-bg: #2a2a3d;
@@ -34,7 +34,7 @@ body.dark-mode {
     --btn-text: #ffffff;
 }
 
-/* 🌟 GLOBAL */
+/* GLOBAL */
 body {
     background: var(--bg-color);
     font-family: 'Inter', sans-serif;
@@ -42,7 +42,7 @@ body {
     transition: background 0.3s, color 0.3s;
 }
 
-/* 🌟 HEADER */
+/*  HEADER */
 .dashboard-header {
     background: var(--header-bg);
     padding: 28px 20px;
@@ -53,7 +53,7 @@ body {
 .dashboard-header h2 { font-weight: 800; font-size: 1.6rem; }
 .dashboard-header p { opacity: 0.9; font-size: 0.95rem; }
 
-/* 🌟 BUTTONS */
+/* BUTTONS */
 .header-btns { margin-top: 14px; }
 .header-btns .btn {
     width: 100%;
@@ -66,7 +66,7 @@ body {
     .header-btns .btn { width: auto; margin-bottom: 0; }
 }
 
-/* 🌟 METRIC CARDS */
+/*METRIC CARDS */
 .metric-card {
     background: var(--card-bg);
     border-radius: 16px;
@@ -78,7 +78,7 @@ body {
 .metric-title { font-size: 0.95rem; color: var(--text-muted); }
 .metric-value { font-size: 1.8rem; font-weight: 800; }
 
-/* 🌟 CHART CONTAINER */
+/*CHART CONTAINER */
 .chart-section {
     background: var(--card-bg);
     padding: 18px;
@@ -89,7 +89,7 @@ body {
 }
 .chart-container { min-height: 260px; width: 100%; }
 
-/* 🌟 TABLE — MOBILE CARD MODE */
+/* TABLE — MOBILE CARD MODE */
 .table-card {
     background: var(--card-bg);
     padding: 16px;
@@ -103,7 +103,7 @@ body {
 @media(min-width:768px) { .mobile-table { display: none; } }
 @media(max-width:767px) { .desktop-table { display: none; } }
 
-/* 🌟 FLOATING BUTTON */
+/* FLOATING BUTTON */
 .floating-btn {
     position: fixed;
     bottom: 30px;
@@ -310,7 +310,7 @@ new Chart(document.getElementById("monthlyChart"), {
 });
 </script>
 
-<!-- 🌙 DARK MODE TOGGLE -->
+<!-- DARK MODE TOGGLE -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const theme = localStorage.getItem('theme');

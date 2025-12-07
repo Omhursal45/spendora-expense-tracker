@@ -15,10 +15,7 @@
 
   <style>
 
-    /* -------------------------------------- */
-    /* LIGHT MODE (DEFAULT)                   */
-    /* -------------------------------------- */
-
+    /* LIGHT MODE (DEFAULT) */
     body {
       background: linear-gradient(135deg, #e3f2fd, #ffffff) !important;
       min-height: 100vh;
@@ -47,11 +44,7 @@
       white-space: normal;
     }
 
-
-    /* -------------------------------------- */
     /* DARK MODE — COMPLETE OVERRIDE          */
-    /* -------------------------------------- */
-
     body.dark-mode {
       background: #0d1117 !important;
       color: #e6edf3 !important;
@@ -144,13 +137,6 @@
 
   </style>
 </head>
-
-
-<!-- ❌ OLD CODE REMOVED (COOKIE CHECK)
-<body class="{% if request.COOKIES.theme == 'dark' %}dark-mode{% endif %}">
--->
-
-<!-- ✅ NEW FIXED CODE -->
 <body>
 
 
@@ -305,10 +291,7 @@
   }
 
 
-  /* -------------------------------------- */
   /* FIXED DARK MODE SYSTEM (LOCALSTORAGE)  */
-  /* -------------------------------------- */
-
   const toggleBtn = document.getElementById("themeToggle");
 
   // Load theme instantly

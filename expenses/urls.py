@@ -48,7 +48,6 @@ urlpatterns = [
     path('delete-expense/<int:expense_id>/', views.delete_expense, name='delete_expense'),
 
     # Wallets
-    # Wallets
     path('wallets/create/', views.create_wallet, name='wallet-create'),          
     path('wallets/', views.wallet_list, name='wallet-list'),                    
     path("wallet/<int:pk>/", views.wallet_detail, name="wallet-detail"), 
