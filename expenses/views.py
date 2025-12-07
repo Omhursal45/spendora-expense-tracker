@@ -154,6 +154,11 @@ def add_wallet_expense(request, wallet_id):
 def home(request):
     return render(request, 'home.html')
 
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+
 def signup(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -179,14 +184,30 @@ def signup(request):
         user = User.objects.create_user(username=username, email=email, password=password1)
         user.save()
 
+        # ✅ Only attempt email if DEBUG=True (local)
+        if settings.DEBUG:
+            try:
+                from django.core.mail import EmailMultiAlternatives
+                from django.template.loader import render_to_string
+                from django.utils.html import strip_tags
+
+                subject = "🎉 Welcome to Spendora!"
+                from_email = settings.EMAIL_HOST_USER
+                to = [email]
+                html_content = render_to_string("emails/welcome_email.html", {"username": username})
+                text_content = strip_tags(html_content)
+
+                msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+                msg.attach_alternative(html_content, "text/html")
+                msg.send()
+            except Exception as e:
+                print("Email not sent:", e)
+
         messages.success(request, "Account created successfully! Please log in.")
-
-        # 🔹 REMOVE email sending on Render
-        # if you want, you can check if DEBUG or RENDER to send only locally
-
         return redirect('login')
 
     return render(request, "signup.html")
+
 
 
 def login_view(request):
