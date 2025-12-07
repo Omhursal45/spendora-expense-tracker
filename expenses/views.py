@@ -197,20 +197,20 @@ def signup(request):
         # -----------------------------
         # SEND WELCOME EMAIL (OPTIONAL)
         # -----------------------------
-        subject = "🎉 Welcome to Spendora — Smart Expense Tracker!"
-        from_email = settings.DEFAULT_FROM_EMAIL
-        to = [email]
+        # subject = "🎉 Welcome to Spendora — Smart Expense Tracker!"
+        # from_email = settings.DEFAULT_FROM_EMAIL
+        # to = [email]
 
-        html_content = render_to_string("emails/welcome_email.html", {"username": username})
-        text_content = strip_tags(html_content)
+        # html_content = render_to_string("emails/welcome_email.html", {"username": username})
+        # text_content = strip_tags(html_content)
 
-        try:
-            msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-            msg.attach_alternative(html_content, "text/html")
-            msg.send()
-            messages.success(request, "Check your inbox 💌 for a welcome message!")
-        except Exception as e:
-            messages.warning(request, f"Account created, but email couldn't be sent ({e})")
+        # try:
+        #     msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+        #     msg.attach_alternative(html_content, "text/html")
+        #     msg.send()
+        #     messages.success(request, "Check your inbox 💌 for a welcome message!")
+        # except Exception as e:
+        #     messages.warning(request, f"Account created, but email couldn't be sent ({e})")
 
         # -----------------------------
         # REDIRECT TO LOGIN
