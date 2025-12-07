@@ -116,13 +116,13 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # EMAIL_HOST_PASSWORD = 'fbst vnxh ohvg jrkk'
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-import os
 
-if os.environ.get("RENDER", "") == "true":
+
+if os.environ.get("RENDER") == "true":
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
     EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")

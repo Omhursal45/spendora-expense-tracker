@@ -17,11 +17,15 @@ from django.shortcuts import render
 import csv
 from django.http import HttpResponse
 
-# Email imports
-from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+# Email imports
+# from django.core.mail import EmailMultiAlternatives
+# from django.conf import settings
+# from django.template.loader import render_to_string
+# from django.utils.html import strip_tags
 
 #expense-pdf matplotlip imports
 
@@ -154,10 +158,7 @@ def add_wallet_expense(request, wallet_id):
 def home(request):
     return render(request, 'home.html')
 
-from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+
 
 def signup(request):
     if request.method == "POST":
@@ -184,7 +185,7 @@ def signup(request):
         user = User.objects.create_user(username=username, email=email, password=password1)
         user.save()
 
-        # ✅ Only attempt email if DEBUG=True (local)
+        # ✅ Only attempt sending email if not on Render
         if settings.DEBUG:
             try:
                 from django.core.mail import EmailMultiAlternatives
@@ -194,6 +195,7 @@ def signup(request):
                 subject = "🎉 Welcome to Spendora!"
                 from_email = settings.EMAIL_HOST_USER
                 to = [email]
+
                 html_content = render_to_string("emails/welcome_email.html", {"username": username})
                 text_content = strip_tags(html_content)
 
@@ -202,11 +204,15 @@ def signup(request):
                 msg.send()
             except Exception as e:
                 print("Email not sent:", e)
+        else:
+            # On Render, just log instead of sending
+            print(f"User {username} signed up. Email sending skipped on Render.")
 
         messages.success(request, "Account created successfully! Please log in.")
         return redirect('login')
 
     return render(request, "signup.html")
+
 
 
 
