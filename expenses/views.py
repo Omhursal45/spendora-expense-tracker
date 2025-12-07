@@ -156,71 +156,38 @@ def home(request):
 
 def signup(request):
     if request.method == "POST":
-        # -----------------------------
-        # GET FORM DATA SAFELY
-        # -----------------------------
-        username = request.POST.get("username", "").strip()
-        email = request.POST.get("email", "").strip()
-        password1 = request.POST.get("password1", "")
-        password2 = request.POST.get("password2", "")
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password1")
+        confirm_password = request.POST.get("password2")
 
-        # -----------------------------
-        # VALIDATION
-        # -----------------------------
-        if not all([username, email, password1, password2]):
-            messages.error(request, "All fields are required.")
-            return redirect("signup")
-
-        if password1 != password2:
-            messages.error(request, "Passwords do not match.")
-            return redirect("signup")
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match")
+            return render(request, "registration/signup.html")
 
         if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists.")
-            return redirect("signup")
+            messages.error(request, "Username already taken")
+            return render(request, "registration/signup.html")
 
-        if User.objects.filter(email__iexact=email).exists():
-            messages.error(request, "Email already exists.")
-            return redirect("signup")
+        if User.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists")
+            return render(request, "registration/signup.html")
 
-        # -----------------------------
-        # CREATE USER
-        # -----------------------------
-        try:
-            user = User.objects.create_user(username=username, email=email, password=password1)
-            user.save()
-            messages.success(request, "Account created successfully!")
-        except Exception as e:
-            messages.error(request, f"User creation failed: {e}")
-            return redirect("signup")
+        User.objects.create_user(
+            username=username,
+            email=email,
+            password=password
+        )
 
-        # -----------------------------
-        # SEND WELCOME EMAIL (OPTIONAL)
-        # -----------------------------
-        # subject = "🎉 Welcome to Spendora — Smart Expense Tracker!"
-        # from_email = settings.DEFAULT_FROM_EMAIL
-        # to = [email]
-
-        # html_content = render_to_string("emails/welcome_email.html", {"username": username})
-        # text_content = strip_tags(html_content)
-
-        # try:
-        #     msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-        #     msg.attach_alternative(html_content, "text/html")
-        #     msg.send()
-        #     messages.success(request, "Check your inbox 💌 for a welcome message!")
-        # except Exception as e:
-        #     messages.warning(request, f"Account created, but email couldn't be sent ({e})")
-
-        # -----------------------------
-        # REDIRECT TO LOGIN
-        # -----------------------------
+        messages.success(request, "Account created successfully! Login now.")
         return redirect("login")
 
-    # -----------------------------
-    # GET REQUEST → SHOW SIGNUP PAGE
-    # -----------------------------
-    return render(request, "signup.html")
+    return render(request, "registration/signup.html")
+
+
+
+
+
 
 def login_view(request):
     if request.method == "POST":
