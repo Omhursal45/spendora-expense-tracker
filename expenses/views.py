@@ -17,15 +17,11 @@ from django.shortcuts import render
 import csv
 from django.http import HttpResponse
 
-from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
 # Email imports
-# from django.core.mail import EmailMultiAlternatives
-# from django.conf import settings
-# from django.template.loader import render_to_string
-# from django.utils.html import strip_tags
+from django.core.mail import EmailMultiAlternatives
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 #expense-pdf matplotlip imports
 
@@ -158,8 +154,6 @@ def add_wallet_expense(request, wallet_id):
 def home(request):
     return render(request, 'home.html')
 
-
-
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -167,96 +161,77 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-import os
 
 def signup(request):
     if request.method == "POST":
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password1 = request.POST.get("password1")
-        password2 = request.POST.get("password2")
+        # -----------------------------
+        # GET FORM DATA SAFELY
+        # -----------------------------
+        username = request.POST.get("username", "").strip()
+        email = request.POST.get("email", "").strip()
+        password1 = request.POST.get("password1", "")
+        password2 = request.POST.get("password2", "")
 
         # -----------------------------
         # VALIDATION
         # -----------------------------
         if not all([username, email, password1, password2]):
             messages.error(request, "All fields are required.")
-            return redirect('signup')
+            return redirect("signup")
 
         if password1 != password2:
             messages.error(request, "Passwords do not match.")
-            return redirect('signup')
+            return redirect("signup")
 
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists.")
-            return redirect('signup')
+            return redirect("signup")
 
-        if User.objects.filter(email=email).exists():
+        if User.objects.filter(email__iexact=email).exists():
             messages.error(request, "Email already exists.")
-            return redirect('signup')
+            return redirect("signup")
 
         # -----------------------------
         # CREATE USER
         # -----------------------------
-        user = User.objects.create_user(username=username, email=email, password=password1)
-        user.save()
+        try:
+            user = User.objects.create_user(username=username, email=email, password=password1)
+            user.save()
+            messages.success(request, "Account created successfully!")
+        except Exception as e:
+            messages.error(request, f"User creation failed: {e}")
+            return redirect("signup")
 
         # -----------------------------
-        # SEND EMAIL (only locally)
+        # SEND WELCOME EMAIL (OPTIONAL)
         # -----------------------------
-        if os.environ.get("RENDER") != "true":
-            try:
-                subject = "🎉 Welcome to Spendora — Smart Expense Tracker!"
-                from_email = settings.EMAIL_HOST_USER
-                to = [email]
+        subject = "🎉 Welcome to Spendora — Smart Expense Tracker!"
+        from_email = settings.DEFAULT_FROM_EMAIL
+        to = [email]
 
-                html_content = render_to_string("emails/welcome_email.html", {"username": username})
-                text_content = strip_tags(html_content)
+        html_content = render_to_string("emails/welcome_email.html", {"username": username})
+        text_content = strip_tags(html_content)
 
-                msg = EmailMultiAlternatives(subject, text_content, from_email, to)
-                msg.attach_alternative(html_content, "text/html")
-                msg.send()
-
-                messages.success(request, "Account created successfully! Check your inbox 💌")
-            except Exception as e:
-                messages.warning(request, f"Account created, but email couldn't be sent ({e})")
-        else:
-            # On Render, skip sending email
-            print(f"Signup successful for {username}, email skipped on Render.")
+        try:
+            msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+            messages.success(request, "Check your inbox 💌 for a welcome message!")
+        except Exception as e:
+            messages.warning(request, f"Account created, but email couldn't be sent ({e})")
 
         # -----------------------------
         # REDIRECT TO LOGIN
         # -----------------------------
-        messages.success(request, "Account created successfully! Please log in.")
-        return redirect('login')
+        return redirect("login")
 
-    # GET request — render signup page
+    # -----------------------------
+    # GET REQUEST → SHOW SIGNUP PAGE
+    # -----------------------------
     return render(request, "signup.html")
 
 
 
-
-
-def login_view(request):
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        user = authenticate(request, username=username, password=password)
-
-        if user:
-            login(request, user)
-            return redirect('dashboard')
-        else:
-            messages.error(request, "Invalid username or password!")
-
-    return render(request, "registration/login.html")
-
-@never_cache
-@login_required
-def logout_view(request):
-    logout(request)
-    messages.success(request, "Logged out successfully!")
-    return redirect("login")
 
 # Dashboard view
 

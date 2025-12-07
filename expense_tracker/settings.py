@@ -118,18 +118,27 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 import os
 
+# -----------------------------
+# EMAIL SETTINGS
+# -----------------------------
 if os.environ.get("RENDER") == "true":
-    # Render CANNOT send real emails — so use console backend
+    # Render cannot send real emails — use console backend
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    DEFAULT_FROM_EMAIL = "no-reply@spendora.com"
 else:
-    # Local development (your laptop) — Gmail will work here
+    # Local development — use Gmail SMTP
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
     
-    # Use ENV variable names (NOT actual email or password)
+    # Use environment variables for security
     EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+    
+    # Set default from email for views
+    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
     EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
 # -----------------------------
