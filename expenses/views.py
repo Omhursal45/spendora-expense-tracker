@@ -154,14 +154,6 @@ def add_wallet_expense(request, wallet_id):
 def home(request):
     return render(request, 'home.html')
 
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.models import User
-from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-
 def signup(request):
     if request.method == "POST":
         # -----------------------------
@@ -230,8 +222,12 @@ def signup(request):
     # -----------------------------
     return render(request, "signup.html")
 
-
-
+@never_cache
+@login_required
+def logout_view(request):
+    logout(request)
+    messages.success(request, "Logged out successfully!")
+    return redirect("login")
 
 # Dashboard view
 
