@@ -116,15 +116,19 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # EMAIL_HOST_PASSWORD = 'fbst vnxh ohvg jrkk'
 # DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-
+import os
 
 if os.environ.get("RENDER") == "true":
+    # Render CANNOT send real emails — so use console backend
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
+    # Local development (your laptop) — Gmail will work here
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = 'smtp.gmail.com'
     EMAIL_PORT = 587
     EMAIL_USE_TLS = True
+    
+    # Use ENV variable names (NOT actual email or password)
     EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
     EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
