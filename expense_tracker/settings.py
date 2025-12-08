@@ -3,7 +3,6 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ---------------- SECURITY ----------------
 SECRET_KEY = os.environ.get("SECRET_KEY", "fallback_secret_key")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
@@ -17,7 +16,6 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-# ---------------- INSTALLED APPS ----------------
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -61,10 +59,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'expense_tracker.wsgi.application'
 
-# ---------------- DATABASE ----------------
 # DATABASE
 if os.environ.get("RENDER") == "true":
-    # Production (Render → Postgres)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -85,7 +81,6 @@ else:
     }
 
 
-# ---------------- AUTH ----------------
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -97,22 +92,22 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 
-# ---------------- INTERNATIONALIZATION ----------------
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# ---------------- STATIC FILES ----------------
+
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# ---------------- EMAIL ----------------
+
 import os
 
 if os.environ.get("RENDER") == "true":
-    # Production (Render uses Postgres)
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -124,7 +119,6 @@ if os.environ.get("RENDER") == "true":
         }
     }
 else:
-    # Local dev: SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

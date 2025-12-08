@@ -8,7 +8,6 @@ from django.db.models import Sum
 from .models import Expense, Wallet
 from .form import ExpenseForm
 from django.views.decorators.cache import never_cache
-from django.utils.timezone import now
 from django.db.models.functions import TruncMonth
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -16,17 +15,6 @@ from budget.models import Insight
 from django.shortcuts import render
 import csv
 from django.http import HttpResponse
-
-# Email imports
-from django.core.mail import EmailMultiAlternatives
-from django.conf import settings
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-
-#expense-pdf matplotlip imports
-
-from django.http import HttpResponse
-from .models import Expense
 from io import BytesIO
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image
@@ -142,7 +130,7 @@ def add_wallet_expense(request, wallet_id):
             messages.success(request, "Expense added successfully!")
             return redirect("wallet-detail", pk=wallet.id)
         else:
-            print(form.errors)  # <-- debug validation issues
+            print(form.errors) 
     else:
         form = ExpenseForm()
 
@@ -150,7 +138,6 @@ def add_wallet_expense(request, wallet_id):
 
 
 # Auth view
-
 def home(request):
     return render(request, 'home.html')
 
@@ -185,10 +172,6 @@ def signup(request):
     return render(request, "registration/signup.html")
 
 
-
-
-
-
 def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -211,7 +194,6 @@ def logout_view(request):
     return redirect("login")
 
 # Dashboard view
-
 @login_required
 def dashboard(request):
     expenses = Expense.objects.filter(user=request.user).order_by('-date_created')
@@ -225,7 +207,6 @@ def dashboard(request):
         for cat in categories
     ]
 
-    # Monthly chart last 6 months
     start_date = datetime.today() - relativedelta(months=5)
     last_6_months = expenses.filter(date_created__gte=start_date).annotate(
         month=TruncMonth('date_created')
@@ -278,7 +259,6 @@ def add_expense(request):
     else:
         form = ExpenseForm()
 
-    # Metrics
     total_expense = expenses.aggregate(total=Sum('amount'))['total'] or 0
     monthly_expense = expenses.filter(date_created__month=datetime.now().month, date_created__year=datetime.now().year).aggregate(total=Sum('amount'))['total'] or 0
     total_items = expenses.count()
@@ -339,8 +319,6 @@ def delete_expense(request, expense_id):
         messages.success(request, "Expense deleted successfully!")
         return redirect("view_expenses")
     return render(request, "expenses/confirm_delete.html", {"expense": expense})
-
-# profile view
 
 @login_required
 def profile(request):
@@ -420,11 +398,9 @@ def export_csv(request):
     writer = csv.writer(response)
     writer.writerow(['Title', 'Amount', 'Category', 'Date'])
 
-    # Get expenses for the logged-in user, ordered by creation date
     expenses = Expense.objects.filter(user=request.user).order_by('-date_created')
 
     for expense in expenses:
-        # Use expense.date_created instead of expense.date
         writer.writerow([expense.title, expense.amount, expense.category, expense.date_created])
 
     return response
@@ -439,7 +415,6 @@ def export_pdf(request):
     doc = SimpleDocTemplate(buffer, pagesize=A4, topMargin=100, bottomMargin=50, leftMargin=50, rightMargin=50)
     elements = []
 
-    # Styles
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle(
         'title',
@@ -458,17 +433,14 @@ def export_pdf(request):
         spaceAfter=20
     )
     
-    # Header
     elements.append(Paragraph("Spendora – My Expense Tracker", title_style))
     elements.append(Paragraph(f"Report for: {request.user.username}", subtitle_style))
     elements.append(Paragraph(f"Generated on: {datetime.now().strftime('%d %b %Y, %H:%M')}", subtitle_style))
     
-    # Summary
     total_amount = sum([exp.amount for exp in expenses])
     elements.append(Paragraph(f"<b>Total Expenses:</b> ₹{total_amount:.2f}", styles['Normal']))
     elements.append(Spacer(1, 0.5*cm))
     
-    # Table Data
     data = [['Title', 'Category', 'Amount (₹)', 'Date']]
     for i, exp in enumerate(expenses):
         row_color = colors.whitesmoke if i % 2 == 0 else colors.lightgrey
@@ -485,7 +457,6 @@ def export_pdf(request):
         ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
     ]))
     
-    # Alternating row colors
     for i in range(1, len(data)):
         bg_color = colors.whitesmoke if i % 2 == 0 else colors.lightgrey
         table.setStyle([('BACKGROUND', (0,i), (-1,i), bg_color)])
@@ -493,7 +464,6 @@ def export_pdf(request):
     elements.append(table)
     elements.append(Spacer(1, 1*cm))
     
-    # Category Pie Chart
     if expenses.exists():
         category_totals = {}
         for exp in expenses:
@@ -507,14 +477,11 @@ def export_pdf(request):
         chart_buffer.seek(0)
         elements.append(Image(chart_buffer, width=12*cm, height=12*cm))
     
-    # Footer function
     def add_page_number(canvas, doc):
         page_num = canvas.getPageNumber()
         text = f"Page {page_num}"
         canvas.setFont('Helvetica', 10)
         canvas.drawRightString(A4[0] - 50, 20, text)
-
-    # Build PDF
     doc.build(elements, onFirstPage=add_page_number, onLaterPages=add_page_number)
     buffer.seek(0)
     

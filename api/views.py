@@ -34,22 +34,16 @@ class LoginAPI(APIView):
             return Response({"msg": "Login successful!"}, status=200)
         return Response({"error": "Invalid credentials"}, status=401)
 
-
-# HELLO TEST API
 class HelloAPI(APIView):
     def get(self, request):
         return Response({"message": "Spendora API working!"})
 
-
-# LIST EXPENSES
 class ExpenseListAPI(APIView):
     def get(self, request):
         expenses = Expense.objects.all()
         serializer = ExpenseSerializer(expenses, many=True)
         return Response(serializer.data)
 
-
-# CREATE EXPENSE
 class ExpenseCreateAPI(APIView):
     def post(self, request):
         serializer = ExpenseSerializer(data=request.data)
@@ -58,8 +52,6 @@ class ExpenseCreateAPI(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-
-# UPDATE EXPENSE
 class ExpenseUpdateAPI(APIView):
     def put(self, request, id):
         try:
@@ -73,8 +65,6 @@ class ExpenseUpdateAPI(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
-
-# DELETE EXPENSE
 class ExpenseDeleteAPI(APIView):
     def delete(self, request, id):
         expense = get_object_or_404(Expense, id=id)

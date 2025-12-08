@@ -5,7 +5,6 @@ from .models import Bill
 
 def send_bill_reminders():
     today = timezone.now().date()
-    # Remind for bills due in next 3 days
     upcoming_bills = Bill.objects.filter(paid=False, due_date__lte=today + timezone.timedelta(days=3))
 
     for bill in upcoming_bills:
