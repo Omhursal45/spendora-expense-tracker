@@ -1,243 +1,210 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Create Wallet - Spendora{% endblock %}
+{% block title %}Create Wallet | Spendora{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-
-  <h1 class="page-title mb-4 text-center">Create Wallet</h1>
-
-  <div class="row g-4">
-
-    <!-- Wallet Form -->
-    <div class="col-lg-6">
-
-      {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-success py-2 px-3 mb-2">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-
-      <div class="glass-card p-4 rounded shadow-sm">
-        <form method="POST">
-          {% csrf_token %}
-
-          <!-- Wallet Name -->
-          <label for="name" class="form-label fw-semibold">Wallet Name</label>
-          <input type="text" name="name" id="name" class="form-control mb-4"
-                 placeholder="Enter wallet name" required>
-
-          <!-- Select Members -->
-          <label class="form-label fw-semibold">Add Members</label>
-          <div class="checkbox-grid mb-4">
-            {% for user in users %}
-              <div class="form-check custom-check">
-                <input class="form-check-input" type="checkbox" name="members"
-                       value="{{ user.id }}" id="user{{ user.id }}">
-                <label class="form-check-label" for="user{{ user.id }}">
-                  {{ user.username }}
-                </label>
-              </div>
-            {% empty %}
-              <p class="text-muted">No other users found.</p>
-            {% endfor %}
-          </div>
-
-          <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Create Wallet</button>
-        </form>
-
-        <a href="{% url 'wallet-list' %}" class="btn btn-outline-secondary w-100">
-          <i class="bi bi-arrow-left"></i> Back to Wallet List
-        </a>
-      </div>
-    </div>
-
-    <!-- Tips Section -->
-    <div class="col-lg-6">
-      <div class="glass-card p-4 rounded shadow-sm">
-
-        <h3 class="tips-title mb-2">💡 Tips for Using Wallets</h3>
-        <p class="text-muted mb-4">Click a tip to expand it for more details.</p>
-
-        <div class="accordion" id="walletTips">
-
-          <!-- Tip 1 -->
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="tipOne">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                🔹 Create wallets for groups, events, or personal budgeting
-              </button>
-            </h2>
-            <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#walletTips">
-              <div class="accordion-body">
-                Make separate wallets for trips, birthdays, or personal management to keep expenses organized.
-              </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-10">
+            
+            <div class="text-center mb-5">
+                <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle mb-3" style="width: 60px; height: 60px;">
+                    <i class="bi bi-wallet2 fs-3"></i>
+                </div>
+                <h1 class="fw-800 display-6 mb-2" style="letter-spacing: -1px;">Create New Wallet</h1>
+                <p class="text-muted">Set up a shared space for group expenses or personal budgets.</p>
             </div>
-          </div>
 
-          <!-- Tip 2 -->
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="tipTwo">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                🔹 Track spending by category
-              </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#walletTips">
-              <div class="accordion-body">
-                Categorize expenses as food, travel, bills — this helps analyze spending better.
-              </div>
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <div class="glass-card p-4 p-md-5">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-success border-0 shadow-sm mb-4">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <div class="mb-4">
+                                <label for="name" class="form-label fw-bold small text-uppercase text-muted">Wallet Name</label>
+                                <input type="text" name="name" id="name" class="form-control custom-input" 
+                                       placeholder="e.g., Monthly Groceries or Goa Trip" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold small text-uppercase text-muted">Invite Members</label>
+                                <div class="member-list-container">
+                                    {% for user in users %}
+                                    <div class="member-item">
+                                        <input type="checkbox" name="members" value="{{ user.id }}" id="user{{ user.id }}" class="btn-check">
+                                        <label class="member-label" for="user{{ user.id }}">
+                                            <div class="avatar-circle">{{ user.username|slice:":1"|upper }}</div>
+                                            <span class="username">{{ user.username }}</span>
+                                            <i class="bi bi-check-circle-fill check-icon"></i>
+                                        </label>
+                                    </div>
+                                    {% empty %}
+                                    <div class="p-3 text-center bg-light rounded-3">
+                                        <p class="text-muted small mb-0">No other users available to add.</p>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-brand-primary w-100 py-3 mb-3">
+                                <i class="bi bi-plus-lg me-2"></i>Create Wallet
+                            </button>
+                            
+                            <a href="{% url 'dashboard' %}" class="btn btn-link text-decoration-none w-100 text-muted small">
+                                <i class="bi bi-arrow-left me-1"></i> Cancel and go back
+                            </a>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="tips-container p-4">
+                        <h4 class="fw-bold mb-4 d-flex align-items-center">
+                            <i class="bi bi-lightbulb-fill text-warning me-2"></i> Wallet Tips
+                        </h4>
+                        
+                        <div class="accordion accordion-flush" id="walletTips">
+                            <div class="accordion-item bg-transparent">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed px-0 bg-transparent fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#t1">
+                                        Shared Expenses
+                                    </button>
+                                </h2>
+                                <div id="t1" class="accordion-collapse collapse" data-bs-parent="#walletTips">
+                                    <div class="accordion-body px-0 text-muted small">
+                                        Add friends to a wallet to automatically split bills and track who owes what.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item bg-transparent">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed px-0 bg-transparent fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#t2">
+                                        Category Limits
+                                    </button>
+                                </h2>
+                                <div id="t2" class="accordion-collapse collapse" data-bs-parent="#walletTips">
+                                    <div class="accordion-body px-0 text-muted small">
+                                        Use specific wallets for categories like "Dining" to see exactly where your money goes.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item bg-transparent">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed px-0 bg-transparent fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#t3">
+                                        Analytics
+                                    </button>
+                                </h2>
+                                <div id="t3" class="accordion-collapse collapse" data-bs-parent="#walletTips">
+                                    <div class="accordion-body px-0 text-muted small">
+                                        Every wallet provides custom charts to visualize spending trends over time.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-
-          <!-- Tip 3 -->
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="tipThree">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                🔹 Share wallets with friends or family
-              </button>
-            </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#walletTips">
-              <div class="accordion-body">
-                Add members and manage shared expenses with groups effortlessly.
-              </div>
-            </div>
-          </div>
-
-          <!-- Tip 4 -->
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="tipFour">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                🔹 Get smart analytics and insights
-              </button>
-            </h2>
-            <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#walletTips">
-              <div class="accordion-body">
-                View trends and analytics to understand your spending behavior.
-              </div>
-            </div>
-          </div>
-
-          <!-- Tip 5 -->
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="tipFive">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                🔹 Set limits and reminders
-              </button>
-            </h2>
-            <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#walletTips">
-              <div class="accordion-body">
-                Set spending limits for categories and reminders for upcoming bills or shared expenses.
-              </div>
-            </div>
-          </div>
-
-          <!-- Tip 6 -->
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="tipSix">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                      data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                🔹 Backup your wallet data
-              </button>
-            </h2>
-            <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#walletTips">
-              <div class="accordion-body">
-                Regularly backup your wallet data to prevent data loss in case of device failure.
-              </div>
-            </div>
-          </div>
-
         </div>
-      </div>
     </div>
-
-  </div>
 </div>
 
 <style>
+    /* Professional Layout Styling */
+    .fw-800 { font-weight: 800; }
+    
+    .glass-card {
+        background: var(--card-light);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+    }
 
-/* Glass Card */
-.glass-card {
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(0,0,0,0.1);
-  transition: all 0.3s ease;
-}
-body.dark-mode .glass-card {
-  background: rgba(0,0,0,0.5);
-  border-color: rgba(255,255,255,0.2);
-}
+    .custom-input {
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        background: var(--bg-light);
+    }
 
-/* Page Title */
-.page-title {
-  color: var(--primary, #2f81f7);
-  font-weight: 700;
-}
+    /* Member List Item Styling */
+    .member-list-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 12px;
+        max-height: 250px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
 
-/* Custom Checkboxes */
-.custom-check {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(0,0,0,0.1);
-  margin-bottom: 8px;
-  background: rgba(255,255,255,0.05);
-  transition: all 0.2s;
-}
-.custom-check:hover {
-  background: rgba(255,255,255,0.15);
-}
-body.dark-mode .custom-check {
-  background: rgba(255,255,255,0.05);
-  border-color: rgba(255,255,255,0.2);
-}
-.custom-check input:checked + label {
-  font-weight: 600;
-  color: var(--primary, #2f81f7);
-}
+    .member-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 15px;
+        background: var(--bg-light);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+    }
 
-/* Accordion Headers */
-.accordion-button {
-  background: rgba(255,255,255,0.9);
-  color: #222;
-  font-weight: 500;
-  transition: all 0.3s;
-}
-.accordion-button:not(.collapsed) {
-  background: rgba(47,129,247,0.1);
-  color: var(--primary, #2f81f7);
-}
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        background: var(--brand-primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
 
-/* Dark mode accordion headers */
-body.dark-mode .accordion-button {
-  background: rgba(50,50,50,0.8);
-  color: #f0f0f0;
-}
-body.dark-mode .accordion-button:not(.collapsed) {
-  background: rgba(47,129,247,0.3);
-  color: #ffffff;
-}
+    .username { font-size: 0.85rem; font-weight: 600; }
 
-/* Accordion Body (Tip Content) */
-.accordion-body {
-  background: rgba(255,255,255,0.95);
-  color: #222;
-  font-size: 0.95rem;
-}
-body.dark-mode .accordion-body {
-  background: rgba(30,30,30,0.8);
-  color: #f0f0f0;
-}
+    .check-icon {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        color: var(--brand-primary);
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
 
-/* Tips Title */
-.tips-title {
-  color: var(--primary, #2f81f7);
-  font-weight: 600;
-}
+    .btn-check:checked + .member-label {
+        border-color: var(--brand-primary);
+        background: rgba(79, 70, 229, 0.05);
+    }
+
+    .btn-check:checked + .member-label .check-icon {
+        opacity: 1;
+    }
+
+    .btn-brand-primary {
+        background: var(--brand-primary);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+
+    .btn-brand-primary:hover {
+        background: var(--brand-secondary);
+        transform: translateY(-2px);
+    }
+
+    .accordion-button:focus { box-shadow: none; }
 </style>
-
 {% endblock %}

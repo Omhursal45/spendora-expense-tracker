@@ -57,5 +57,8 @@ urlpatterns = [
     path('expense-help/',views.expense_help, name='expense-help'),
     path('export/csv/', views.export_csv, name='export_csv'),
     path('export/pdf/', views.export_pdf, name='export_pdf'),
-
+    
+    path('analytics/', views.analytics_view, name='analytics'),
+    path('budgets/', views.budget_view, name='budgets'),
+    path('budgets/add/', views.add_budget, name='add_budget'),
 ]

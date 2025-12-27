@@ -19,15 +19,9 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
-# ---------------------------
-# HOME
-# ---------------------------
 def home(request):
     return render(request, 'home.html')
 
-# ---------------------------
-# SIGNUP
-# ---------------------------
 def signup(request):
     if request.method == "POST":
         username = request.POST.get("username")

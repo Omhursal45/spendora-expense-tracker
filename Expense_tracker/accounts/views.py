@@ -9,10 +9,6 @@ from .serializers import SignupSerializer, LoginSerializer
 from django.contrib import messages
 
 
-# ---------------------
-# TEMPLATE VIEWS
-# ---------------------
-
 def login_page(request):
     if request.method == "POST":
         username = request.POST.get("username")

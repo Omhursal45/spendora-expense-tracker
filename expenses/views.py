@@ -486,3 +486,82 @@ def export_pdf(request):
     buffer.seek(0)
     
     return HttpResponse(buffer, content_type='application/pdf')
+
+
+from django.db.models import Sum, Max, Avg
+# ... other imports
+
+@login_required
+def analytics_view(request):
+    user_expenses = Expense.objects.filter(user=request.user)
+    
+    # Summary Stats
+    total_spending = user_expenses.aggregate(Sum('amount'))['amount__sum'] or 0
+    max_expense = user_expenses.aggregate(Max('amount'))['amount__max'] or 0
+    avg_expense = user_expenses.aggregate(Avg('amount'))['amount__avg'] or 0
+
+    # Grouping data for the chart AND the list
+    # This creates: [{'category': 'Food', 'total': 200}, {'category': 'Bills', 'total': 1200}]
+    category_data = user_expenses.values('category').annotate(total=Sum('amount')).order_by('-total')
+
+    # Prepare lists for Chart.js
+    labels = [item['category'] for item in category_data]
+    values = [float(item['total']) for item in category_data]
+
+    context = {
+        'total_spending': total_spending,
+        'max_expense': max_expense,
+        'avg_expense': round(avg_expense, 2),
+        'labels': labels,
+        'values': values,
+        'category_data': category_data,  # Critical for fixing "Syncing..."
+    }
+    return render(request, 'analytics.html', context)
+
+from django.shortcuts import render, redirect
+from django.db.models import Sum
+from .models import Budget, Expense 
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def budget_view(request):
+    user_budgets = Budget.objects.filter(user=request.user)
+    budget_list = []
+
+    for b in user_budgets:
+        spent = Expense.objects.filter(
+            user=request.user, 
+            category=b.category
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+        
+        percent = (spent / b.amount) * 100 if b.amount > 0 else 0
+        
+        budget_list.append({
+            'category': b.category,
+            'limit': b.amount,
+            'spent': spent,
+            'percent': min(percent, 100),
+            'remaining': b.amount - spent,
+            'color': "danger" if percent >= 90 else "warning" if percent >= 70 else "primary",
+            'icon': b.icon
+        })
+        
+    return render(request, 'budgets.html', {'budgets': budget_list})
+
+@login_required
+def add_budget(request):
+    if request.method == 'POST':
+        category = request.POST.get('category')
+        amount = request.POST.get('amount')
+        icon = request.POST.get('icon')
+
+        # This saves the data to the database
+        Budget.objects.create(
+            user=request.user,
+            category=category,
+            amount=amount,
+            icon=icon
+        )
+        return redirect('budgets') # This takes you back to the list
+
+    return render(request, 'add_budget.html')

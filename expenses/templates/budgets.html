@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Spendora - Budgets{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Brand Button Styling */
+    .btn-brand {
+        background-color: var(--brand-primary, #4f46e5);
+        border: 1px solid var(--brand-primary, #4f46e5);
+        color: white;
+        padding: 0.6rem 1.5rem;
+        font-weight: 700;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-brand:hover {
+        background-color: #4338ca;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+    }
+
+    /* Progress bar background for better contrast */
+    .progress {
+        background-color: rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* --- Night Mode Interactions --- */
+    
+    /* Card Background in Dark Mode */
+    body.dark-mode .card {
+        background-color: #1e293b !important; /* Dark Slate */
+        border: 1px solid #334155 !important;
+        color: #f8fafc;
+    }
+
+    /* Text adjustments for Dark Mode */
+    body.dark-mode .text-muted {
+        color: #94a3b8 !important; /* Lighter grey for dark background */
+    }
+
+    body.dark-mode h2, body.dark-mode h5 {
+        color: #ffffff;
+    }
+
+    /* Progress bar background adjustment for Dark Mode */
+    body.dark-mode .progress {
+        background-color: #334155 !important;
+    }
+</style>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold">My Budgets</h2>
+        <p class="text-muted">Monitor your limits to save more.</p>
+    </div>
+    <a href="{% url 'add_budget' %}" class="btn btn-brand">
+        <i class="bi bi-plus-lg me-2"></i>Set New Budget
+    </a>
+</div>
+
+<div class="row g-4">
+    {% for b in budgets %}
+    
+    <div class="col-12">
+        <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center">
+                    <div class="p-3 rounded-3 bg-{{ b.color }} bg-opacity-10 text-{{ b.color }} me-3">
+                        <i class="bi {{ b.icon }} fs-4"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">{{ b.category }}</h5>
+                        <small class="text-muted">Monthly Limit: ₹{{ b.limit }}</small>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <h5 class="fw-bold mb-0">₹{{ b.spent }}</h5>
+                    <small class="text-muted">Used ({{ b.percent|floatformat:0 }}%)</small>
+                </div>
+            </div>
+            
+            <div class="progress" style="height: 10px; border-radius: 10px; background: var(--bg-light);">
+                <div class="progress-bar bg-{{ b.color }}" 
+                    role="progressbar" 
+                    style="width: {{ b.percent }}%; border-radius: 10px;" 
+                    aria-valuenow="{{ b.percent }}" 
+                    aria-valuemin="0" 
+                    aria-valuemax="100"></div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-3 small">
+                <span class="text-muted">Remaining: <b>₹{{ b.remaining }}</b></span>
+                
+                {% if b.percent >= 100 %}
+                    <span class="text-danger fw-bold"><i class="bi bi-x-circle me-1"></i> Budget Exceeded</span>
+                {% elif b.percent >= 80 %}
+                    <span class="text-warning fw-bold"><i class="bi bi-exclamation-triangle me-1"></i> Almost Full</span>
+                {% else %}
+                    <span class="text-success"><i class="bi bi-check-circle me-1"></i> On track</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <i class="bi bi-piggy-bank text-muted display-1"></i>
+        <p class="text-muted mt-3">You haven't set any budgets yet.</p>
+        <a href="{% url 'add_budget' %}" class="btn btn-outline-primary rounded-pill">Create First Budget</a>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
