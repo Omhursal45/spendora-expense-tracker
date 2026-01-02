@@ -5,6 +5,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Sum
+from .models import Budget, Expense 
 from .models import Expense, Wallet
 from .form import ExpenseForm
 from django.views.decorators.cache import never_cache
@@ -518,10 +519,6 @@ def analytics_view(request):
     }
     return render(request, 'analytics.html', context)
 
-from django.shortcuts import render, redirect
-from django.db.models import Sum
-from .models import Budget, Expense 
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def budget_view(request):
