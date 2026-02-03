@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block title %}Spendora – Smart Expense Tracker{% endblock %}
+{% block content %}
+
+<!-- 🌈 HERO SECTION -->
+<section 
+  class="text-white d-flex align-items-center" 
+  style="min-height: 90vh;
+         background: linear-gradient(135deg, #6a11cb, #2575fc);
+         position: relative; overflow: hidden;">
+  
+  <!-- Floating Blobs -->
+  <div class="position-absolute bg-white opacity-10 rounded-circle" 
+       style="width: 250px; height: 250px; top: 10%; left: 5%; filter: blur(80px);"></div>
+  <div class="position-absolute bg-white opacity-10 rounded-circle" 
+       style="width: 300px; height: 300px; bottom: 5%; right: 5%; filter: blur(100px);"></div>
+
+  <div class="container text-center" data-aos="fade-up">
+    <h1 class="display-3 fw-bold mb-3 animate__animated animate__fadeInDown">
+      Smarter Spending Starts Here ✨
+    </h1>
+    <p class="lead mb-4 animate__animated animate__fadeInUp" style="font-size: 1.3rem;">
+      Track your expenses effortlessly with Spendora's clean insights & intelligent reports.
+    </p>
+
+    <div class="d-flex justify-content-center gap-3 mt-4">
+      <a href="{% url 'signup' %}" 
+         class="btn btn-light btn-lg px-5 py-3 fw-semibold shadow-lg rounded-pill animate__animated animate__fadeInLeft">
+        Get Started Free
+      </a>
+      <a href="{% url 'login' %}" 
+         class="btn btn-outline-light btn-lg px-5 py-3 fw-semibold rounded-pill animate__animated animate__fadeInRight">
+        Login
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ✨ FEATURES SECTION -->
+<section class="py-5 bg-light">
+  <div class="container">
+
+    <div class="text-center mb-5" data-aos="fade-up">
+      <h2 class="fw-bold text-primary display-6">Everything You Need to Save Smarter</h2>
+      <p class="text-muted">Spendora's minimalist UI makes money management effortless.</p>
+    </div>
+
+    <div class="row g-4">
+      
+      <!-- Feature Card -->
+      <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+        <div class="card shadow border-0 rounded-4 text-center p-4 feature-card">
+          <div class="display-4 mb-3 text-primary">⚡</div>
+          <h4 class="fw-bold mb-2">Instant Insights</h4>
+          <p class="text-muted">Get daily and monthly spending breakdowns in one clean dashboard.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
+        <div class="card shadow border-0 rounded-4 text-center p-4 feature-card">
+          <div class="display-4 mb-3 text-primary">📊</div>
+          <h4 class="fw-bold mb-2">Visual Reports</h4>
+          <p class="text-muted">Beautiful charts help you understand where your money actually goes.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
+        <div class="card shadow border-0 rounded-4 text-center p-4 feature-card">
+          <div class="display-4 mb-3 text-primary">🛡️</div>
+          <h4 class="fw-bold mb-2">Enterprise Security</h4>
+          <p class="text-muted">Your data stays encrypted & protected with advanced Django authentication.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 🚀 CTA SECTION -->
+<section class="text-white text-center py-5" 
+         style="background: linear-gradient(135deg, #2575fc, #6a11cb);">
+  <div class="container" data-aos="fade-up">
+    <h2 class="display-6 fw-bold mb-3">Ready to Master Your Money?</h2>
+    <p class="lead mb-4">Join Spendora and take the first step toward financial clarity.</p>
+    <a href="{% url 'signup' %}" 
+       class="btn btn-light btn-lg px-5 py-3 fw-semibold rounded-pill shadow">
+      Create Free Account
+    </a>
+  </div>
+</section>
+
+<!-- 🌐 FOOTER -->
+<footer class="bg-dark text-center text-white py-3 mt-4">
+  <p class="mb-0">© 2025 Spendora | Designed by <b>Om Hursal</b> 🌟</p>
+</footer>
+
+<!-- AOS + Animate -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init({ duration: 900, once: true });</script>
+
+<style>
+  .feature-card {
+    transition: all 0.35s ease;
+  }
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+</style>
+
+{% endblock %}

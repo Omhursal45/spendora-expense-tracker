@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Welcome to Spendora</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #f7f9fc;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      background: #fff;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .header {
+      text-align: center;
+      background: #4f46e5;
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px 10px 0 0;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+    .content {
+      padding: 20px;
+    }
+    .content p {
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #4f46e5;
+      color: white !important;
+      text-decoration: none;
+      border-radius: 6px;
+      margin-top: 20px;
+    }
+    .footer {
+      text-align: center;
+      color: #777;
+      margin-top: 40px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Welcome to Spendora 💰</h1>
+    </div>
+
+    <div class="content">
+      <p>Hi <strong>{{ username }}</strong>,</p>
+
+      <p>Welcome to <strong>Spendora</strong> — your personal expense tracking companion! 🎯</p>
+
+      <p>With Spendora, you can:</p>
+      <ul>
+        <li>💡 Track your daily expenses effortlessly</li>
+        <li>📊 View spending insights and trends</li>
+        <li>🧾 Edit or delete past transactions</li>
+        <li>🔒 Keep your data safe and secure</li>
+      </ul>
+
+      <p>Start exploring your dashboard and take control of your finances today!</p>
+
+      <p style="text-align: center;">
+        <a href="http://127.0.0.1:8000/login" class="button">Go to Dashboard</a>
+      </p>
+
+      <p>If you ever need help, just reply to this email or contact us at <a href="mailto:support@spendora.com">support@spendora.com</a>.</p>
+
+      <p>Cheers,<br><strong>The Spendora Team 💼</strong></p>
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2025 Spendora. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

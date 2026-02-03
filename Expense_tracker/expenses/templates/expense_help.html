@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}How Spendora Works{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+  <div class="card shadow-lg border-0 p-4">
+    
+    <div class="text-center mb-4">
+      <h2 class="fw-bold">💡 How Spendora Helps You Manage Money Smartly</h2>
+      <p class="text-muted mb-0">
+        A simple, clear, and powerful way to track your daily expenses, monitor budgets, and stay financially disciplined.
+      </p>
+    </div>
+
+    <!-- Steps -->
+    <h5 class="fw-semibold mb-3">🚀 Get Started in 4 Simple Steps</h5>
+    <div class="list-group list-group-flush mb-4">
+
+      <div class="list-group-item py-3">
+        <span class="fs-5">🧾 <strong>Create Wallets</strong></span>
+        <p class="text-muted mb-0">Separate your spending by categories like Personal, Travel, Family, or Projects.</p>
+      </div>
+
+      <div class="list-group-item py-3">
+        <span class="fs-5">💸 <strong>Add Expenses Instantly</strong></span>
+        <p class="text-muted mb-0">Record your expenses instantly — title, amount, category.</p>
+      </div>
+
+      <div class="list-group-item py-3">
+        <span class="fs-5">📊 <strong>Analyse With Dashboard</strong></span>
+        <p class="text-muted mb-0">Charts, recent activity, category-wise insights.</p>
+      </div>
+
+      <div class="list-group-item py-3">
+        <span class="fs-5">🤝 <strong>Share Wallets</strong></span>
+        <p class="text-muted mb-0">Invite family or friends and manage money together.</p>
+      </div>
+
+    </div>
+
+    <!-- Tips -->
+    <h5 class="fw-semibold mb-3">📌 Pro Tips for Better Money Management</h5>
+    <ul class="list-group list-group-flush mb-4">
+      <li class="list-group-item py-2">📝 Log expenses immediately.</li>
+      <li class="list-group-item py-2">📁 Use consistent categories.</li>
+      <li class="list-group-item py-2">📉 Review monthly spending.</li>
+      <li class="list-group-item py-2">📆 Set budgets.</li>
+      <li class="list-group-item py-2">🔔 Use reminders.</li>
+      <li class="list-group-item py-2">👥 Assign roles for shared wallets.</li>
+    </ul>
+
+    <!-- Bonus -->
+    <h5 class="fw-semibold mb-3">✨ Bonus Features You’ll Love</h5>
+    <ul class="list-group list-group-flush mb-4">
+      <li class="list-group-item py-2">🌙 Dark mode support.</li>
+      <li class="list-group-item py-2">🛡 Secure login & encrypted data.</li>
+      <li class="list-group-item py-2">📥 Export PDF/CSV.</li>
+      <li class="list-group-item py-2">⭐ Smart alerts (coming soon).</li>
+    </ul>
+
+    <!-- Buttons -->
+    <div class="mt-4 d-flex flex-column flex-md-row gap-3 justify-content-center justify-content-md-start">
+      <a href="{% url 'add_expense' %}" class="btn btn-primary btn-lg shadow-sm">
+        <i class="bi bi-plus-circle"></i> Add Your First Expense
+      </a>
+      <a href="{% url 'wallet-create' %}" class="btn btn-outline-primary btn-lg shadow-sm">
+        <i class="bi bi-wallet2"></i> Create a Wallet
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  
+/* LIGHT MODE (DEFAULT) */
+body { background-color: #f8f9fa; color: #1f2937; }
+.card { background-color: #ffffff; color: #1f2937; }
+.list-group-item { background-color: #ffffff; color: #1f2937; border-color: #e5e7eb; }
+.text-muted { color: #6b7280 !important; }
+
+.btn-primary { background-color: #6366f1; border-color: #6366f1; }
+.btn-primary:hover { background-color: #4f46e5; }
+.btn-outline-primary { color: #4f46e5; border-color: #4f46e5; }
+.btn-outline-primary:hover { background-color: #4f46e5; color: white; }
+
+/* DARK MODE — MATCHES base.html */
+body.dark-mode {
+  background-color: #0d1117 !important;
+  color: #e6edf3 !important;
+}
+
+body.dark-mode .card {
+  background-color: #161b22 !important;
+  color: #e6edf3 !important;
+  border: 1px solid #30363d !important;
+}
+
+body.dark-mode .list-group-item {
+  background-color: #21262d !important;
+  color: #e6edf3 !important;
+  border-color: #30363d !important;
+}
+
+body.dark-mode .text-muted {
+  color: #9ca3af !important;
+}
+
+body.dark-mode h2,
+body.dark-mode h5,
+body.dark-mode strong {
+  color: #ffffff !important;
+}
+
+/* Buttons */
+body.dark-mode .btn-primary {
+  background-color: #238636 !important;
+  border-color: #238636 !important;
+}
+
+body.dark-mode .btn-outline-primary {
+  color: #2f81f7 !important;
+  border-color: #2f81f7 !important;
+}
+
+body.dark-mode .btn-outline-primary:hover {
+  background-color: #2f81f7 !important;
+  color: white !important;
+}
+</style>
+
+{% endblock %}

@@ -3,171 +3,287 @@
 
 {% block content %}
 <style>
-  body { background: #f5f7fb; }
+    /* ENTRY ANIMATION */
+    .profile-container {
+        animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        max-width: 1000px;
+        margin: auto;
+    }
 
-  .profile-wrapper { max-width: 1100px; margin: 50px auto; }
+    /* HEADER SECTION */
+    .profile-card {
+        background: var(--card-light);
+        border: 1px solid rgba(0,0,0,0.04);
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px -12px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+    }
 
-  .profile-header {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-    background: #fff;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 8px 28px rgba(0,0,0,0.08);
-  }
+    .profile-header-gradient {
+        height: 160px;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        position: relative;
+    }
 
-  .profile-avatar {
-    height: 120px;
-    width: 120px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #4f46e5, #6366f1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 55px;
-    flex-shrink: 0;
-    box-shadow: 0 5px 20px rgba(99,102,241,0.3);
-  }
+    .profile-content {
+        padding: 0 2.5rem 2.5rem 2.5rem;
+        margin-top: -60px;
+    }
 
-  .profile-info h2 { margin: 0; font-weight: 700; color: #333; }
-  .profile-info p { margin: 5px 0; color: #666; }
+    .avatar-wrapper {
+        position: relative;
+        display: inline-block;
+    }
 
-  .profile-metrics { margin-top: 30px; }
-  .metric-card { border-radius: 14px; padding: 20px; background: #ffffff; box-shadow: 0 4px 18px rgba(0,0,0,0.08); text-align: center; }
-  .metric-value { font-size: 28px; font-weight: 700; margin-top: 8px; }
+    .avatar-ui {
+        width: 130px;
+        height: 130px;
+        background: var(--card-light);
+        border: 6px solid var(--card-light);
+        border-radius: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: var(--primary-brand);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+    }
 
-  .charts-row { margin-top: 40px; }
-  .chart-container { position: relative; width: 100%; min-height: 300px; margin-top: 20px; }
+    /* QUICK INFO PILLS */
+    .data-badge {
+        background: rgba(79, 70, 229, 0.05);
+        border: 1px solid rgba(79, 70, 229, 0.1);
+        padding: 0.6rem 1.2rem;
+        border-radius: 14px;
+        transition: 0.3s;
+    }
+
+    .data-badge:hover {
+        background: rgba(79, 70, 229, 0.1);
+        transform: translateY(-2px);
+    }
+
+    /* METRIC GRID */
+    .metric-glass {
+        background: var(--card-light);
+        border: 1px solid rgba(0,0,0,0.04);
+        border-radius: 24px;
+        padding: 1.8rem;
+        box-shadow: 0 10px 30px -5px rgba(0,0,0,0.04);
+        height: 100%;
+        transition: 0.3s;
+    }
+
+    .metric-glass:hover {
+        box-shadow: 0 21px 40px -10px rgba(0,0,0,0.08);
+    }
+
+    .metric-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        text-transform: uppercase;
+    }
+
+    /* CHART BOXES */
+    .chart-card {
+        background: var(--card-light);
+        border-radius: 28px;
+        padding: 2rem;
+        border: 1px solid rgba(0,0,0,0.04);
+        box-shadow: 0 10px 30px -5px rgba(0,0,0,0.04);
+    }
+
+    /* DARK MODE OVERRIDES */
+    body.dark-mode .profile-card, 
+    body.dark-mode .metric-glass,
+    body.dark-mode .chart-card {
+        background: #1e293b;
+        border-color: rgba(255,255,255,0.05);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    body.dark-mode .avatar-ui {
+        background: #1e293b;
+        border-color: #1e293b;
+    }
+
+    body.dark-mode .data-badge {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 </style>
 
-<div class="profile-wrapper">
+<div class="profile-container pb-5">
+    <div class="mb-4">
+        <button class="btn btn-link text-decoration-none text-muted fw-semibold p-0" onclick="window.history.back()">
+            <i class="bi bi-arrow-left-short fs-4 align-middle"></i> Back to Dashboard
+        </button>
+    </div>
 
-  <!-- PROFILE HEADER -->
-  <div class="profile-header">
-    <div class="profile-avatar">
-      <i class="bi bi-person-fill"></i>
-    </div>
-    <div class="profile-info">
-      <h2>{{ user.username }}</h2>
-      <p><strong>Email:</strong> {{ user.email }}</p>
-      <p><strong>Total Entries:</strong> {{ total_items }}</p>
-      <p><strong>Total Categories:</strong> {{ total_categories }}</p>
-      <p><strong>Total Expense:</strong> ₹{{ total_expense }}</p>
-      <div class="mt-3">
-        <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary me-2">Edit Profile</a>
-        <a href="{% url 'change_password' %}" class="btn btn-outline-warning me-2">Change Password</a>
+    <div class="profile-card">
+        <div class="profile-header-gradient"></div>
+        <div class="profile-content">
+            <div class="d-flex flex-column flex-md-row align-items-center align-items-md-end justify-content-between gap-4">
+                <div class="d-flex flex-column flex-md-row align-items-center align-items-md-end gap-4 text-center text-md-start">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-ui">{{ user.username|slice:":1"|upper }}</div>
+                    </div>
+                    <div class="pb-2">
+                        <h1 class="fw-800 display-6 mb-1">{{ user.username }}</h1>
+                        <p class="text-muted fw-medium mb-0"><i class="bi bi-envelope me-2"></i>{{ user.email }}</p>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 pb-2">
+                    <a href="{% url 'edit_profile' %}" class="btn btn-primary shadow-sm px-4 py-2">Edit Profile</a>
+                    <button class="btn btn-light border px-3 py-2" onclick="confirmLogout()">
+                        <i class="bi bi-box-arrow-right text-danger"></i>
+                    </button>
+                </div>
+            </div>
 
-        <!-- Logout Form -->
-        <form id="logoutForm" action="{% url 'logout' %}" method="post" style="display:inline;">
-          {% csrf_token %}
-          <button type="button" class="btn btn-danger" id="logoutBtn">Logout</button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- METRICS CARDS -->
-  <div class="row g-4 profile-metrics">
-    <div class="col-md-4">
-      <div class="metric-card">
-        <p>Monthly Expense</p>
-        <div class="metric-value text-warning">₹{{ monthly_expense }}</div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="metric-card">
-        <p>Average Expense</p>
-        <div class="metric-value text-info">₹{{ avg_expense }}</div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="metric-card">
-        <p>Max Expense</p>
-        <div class="metric-value text-success">₹{{ max_expense }}</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CHARTS -->
-  <div class="row g-4 charts-row">
-    <div class="col-md-6">
-      <div class="metric-card">
-        <h5 class="fw-bold mb-3">Spending by Category</h5>
-        <div class="chart-container">
-          <canvas id="categoryChart"></canvas>
+            <div class="row g-3 mt-4">
+                <div class="col-6 col-lg-3">
+                    <div class="data-badge">
+                        <div class="small text-muted fw-bold">RECORDS</div>
+                        <div class="fw-800 fs-5">{{ total_items }}</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="data-badge">
+                        <div class="small text-muted fw-bold">CATEGORIES</div>
+                        <div class="fw-800 fs-5">{{ total_categories }}</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="data-badge">
+                        <div class="small text-muted fw-bold">TOTAL SPENT</div>
+                        <div class="fw-800 fs-5">₹{{ total_expense }}</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="data-badge text-center">
+                        <a href="{% url 'change_password' %}" class="text-decoration-none text-primary small fw-800">
+                            <i class="bi bi-shield-lock me-1"></i> UPDATE PASS
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-    <div class="col-md-6">
-      <div class="metric-card">
-        <h5 class="fw-bold mb-3">Monthly Expenses</h5>
-        <div class="chart-container">
-          <canvas id="monthlyChart"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
 
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="metric-glass border-start border-warning border-4">
+                <div class="metric-label mb-2">Monthly Spend</div>
+                <h2 class="fw-800 mb-0">₹{{ monthly_expense }}</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-glass border-start border-info border-4">
+                <div class="metric-label mb-2">Average Ticket</div>
+                <h2 class="fw-800 mb-0">₹{{ avg_expense }}</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="metric-glass border-start border-success border-4">
+                <div class="metric-label mb-2">Max Expense</div>
+                <h2 class="fw-800 mb-0">₹{{ max_expense }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="chart-card">
+                <h5 class="fw-800 mb-4">Spending by Category</h5>
+                <div style="height: 300px;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="chart-card">
+                <h5 class="fw-800 mb-4">Expense Activity</h5>
+                <div style="height: 300px;">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-  document.getElementById('logoutBtn').addEventListener('click', function(){
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You will be logged out!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, logout'
-    }).then((result) => {
-      if(result.isConfirmed){
-        document.getElementById('logoutForm').submit();
-      }
-    });
-  });
-</script>
+<form id="logoutForm" action="{% url 'logout' %}" method="post" style="display:none;">{% csrf_token %}</form>
 
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 {{ categories|json_script:"cat_data" }}
 {{ category_totals|json_script:"cat_totals_data" }}
 {{ months|json_script:"months_data" }}
 {{ monthly_totals|json_script:"monthly_totals_data" }}
 
 <script>
-  const categories = JSON.parse(document.getElementById("cat_data").textContent);
-  const categoryTotals = JSON.parse(document.getElementById("cat_totals_data").textContent);
-  const categoryColors = ["#F72585","#4ECDC4","#FFD93D","#FF6F91","#4f46e5","#FF9F1C","#2EC4B6","#8D99AE","#FF6B6B","#6A0572"];
-  const colors = categories.map((_, i) => categoryColors[i % categoryColors.length]);
+    const isDark = document.body.classList.contains('dark-mode');
+    const labelColor = isDark ? '#94a3b8' : '#64748b';
+    const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
 
-  new Chart(document.getElementById("categoryChart"), {
-    type: "doughnut",
-    data: { labels: categories, datasets:[{ data: categoryTotals, backgroundColor: colors, borderColor:"#fff", borderWidth:2 }]},
-    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{position:'bottom'} } }
-  });
+    // Doughnut
+    new Chart(document.getElementById("categoryChart"), {
+        type: "doughnut",
+        data: {
+            labels: JSON.parse(document.getElementById("cat_data").textContent),
+            datasets: [{
+                data: JSON.parse(document.getElementById("cat_totals_data").textContent),
+                backgroundColor: ["#4f46e5", "#10b981", "#f59e0b", "#ef4444", "#6366f1", "#ec4899", "#2dd4bf"],
+                borderWidth: 0,
+                hoverOffset: 20
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '80%',
+            plugins: {
+                legend: { position: 'bottom', labels: { color: labelColor, usePointStyle: true, font: { family: 'Inter', size: 12 } } }
+            }
+        }
+    });
 
-  const months = JSON.parse(document.getElementById("months_data").textContent);
-  const monthlyTotals = JSON.parse(document.getElementById("monthly_totals_data").textContent);
-
-  new Chart(document.getElementById("monthlyChart"), {
-    type: "line",
-    data: { labels: months, datasets:[{
-      label:"Monthly Expenses",
-      data: monthlyTotals,
-      fill:true,
-      borderColor:"#4f46e5",
-      backgroundColor:"rgba(79,70,229,0.2)",
-      tension:0.4,
-      pointBackgroundColor:"#4f46e5",
-      pointRadius:5
-    }]},
-    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} } }
-  });
+    // Line
+    new Chart(document.getElementById("monthlyChart"), {
+        type: "line",
+        data: {
+            labels: JSON.parse(document.getElementById("months_data").textContent),
+            datasets: [{
+                label: "Expenses",
+                data: JSON.parse(document.getElementById("monthly_totals_data").textContent),
+                fill: true,
+                borderColor: "#4f46e5",
+                backgroundColor: "rgba(79, 70, 229, 0.08)",
+                borderWidth: 4,
+                tension: 0.4,
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                pointHoverBackgroundColor: "#4f46e5"
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { grid: { color: gridColor }, ticks: { color: labelColor, font: { family: 'Inter' } } },
+                x: { grid: { display: false }, ticks: { color: labelColor, font: { family: 'Inter' } } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
 </script>
 {% endblock %}

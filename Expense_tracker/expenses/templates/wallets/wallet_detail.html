@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ wallet.name }} - Spendora{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="glass-card p-4 p-md-5 mb-4 position-relative overflow-hidden">
+        <div class="position-relative z-index-1">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <span class="badge bg-primary-soft text-primary mb-2 px-3 py-2 rounded-pill">
+                        <i class="bi bi-shield-check me-1"></i> Shared Wallet
+                    </span>
+                    <h1 class="fw-800 display-5 mb-1">{{ wallet.name }}</h1>
+                    <p class="text-muted mb-0">
+                        Organized by <span class="text-dark fw-bold">@{{ wallet.created_by.username }}</span>
+                    </p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'add-wallet-expense' wallet.id %}" class="btn btn-brand-primary btn-lg px-4 shadow-sm">
+                        <i class="bi bi-plus-lg me-2"></i>Add Expense
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4 d-flex align-items-center">
+                    <i class="bi bi-people me-2 text-primary"></i> Members 
+                    <span class="ms-auto badge bg-light text-muted small">{{ wallet.members.count }}</span>
+                </h5>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for m in wallet.members.all %}
+                        <div class="member-chip {% if m == request.user %}is-me{% endif %}">
+                            <div class="avatar-xs">{{ m.username|slice:":1"|upper }}</div>
+                            <span>{{ m.username }}</span>
+                            {% if m == request.user %}
+                                <span class="ms-1 small opacity-75">(You)</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4">Expense History</h5>
+                
+                {% if expenses %}
+                    <div class="table-responsive">
+                        <table class="table align-middle custom-ledger">
+                            <thead>
+                                <tr>
+                                    <th>Transaction</th>
+                                    <th>Added By</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for e in expenses %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="category-icon me-3">
+                                                <i class="bi bi-receipt"></i>
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold text-main">{{ e.title }}</div>
+                                                <div class="text-muted smallest">{{ e.date_created|date:"M d, Y" }} • {{ e.category }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted small">@{{ e.user.username }}</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <span class="fw-800 text-dark">₹{{ e.amount }}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-clipboard2-x display-4 text-light-dark"></i>
+                        <p class="text-muted mt-3">No expenses found in this wallet yet.</p>
+                        <a href="{% url 'add-wallet-expense' wallet.id %}" class="btn btn-sm btn-outline-primary mt-2">Create first entry</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fw-800 { font-weight: 800; }
+    .smallest { font-size: 0.75rem; }
+    
+    /* Glass Effect */
+    .glass-card {
+        background: var(--card-light);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+    }
+
+    /* Decorative Background */
+    .bg-circle {
+        position: absolute; top: -50px; right: -50px; width: 200px; height: 200px;
+        background: var(--brand-primary); opacity: 0.05; border-radius: 50%; z-index: 0;
+    }
+
+    /* Member Chips */
+    .member-chip {
+        display: flex; align-items: center; padding: 6px 14px; border-radius: 50px;
+        background: var(--bg-light); border: 1px solid var(--border-color); font-size: 0.85rem;
+    }
+    .member-chip.is-me {
+        background: rgba(79, 70, 229, 0.1); border-color: var(--brand-primary); color: var(--brand-primary);
+    }
+    .avatar-xs {
+        width: 20px; height: 20px; background: var(--brand-primary); color: white;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 0.65rem; margin-right: 8px; font-weight: 700;
+    }
+
+    /* Custom Ledger Table */
+    .custom-ledger thead th {
+        font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted);
+        letter-spacing: 1px; border-top: none; border-bottom: 2px solid var(--bg-light); padding-bottom: 15px;
+    }
+    .custom-ledger tbody tr { border-bottom: 1px solid var(--bg-light); }
+    .custom-ledger tbody tr:last-child { border-bottom: none; }
+    .custom-ledger td { padding: 18px 0; }
+
+    .category-icon {
+        width: 40px; height: 40px; background: var(--bg-light);
+        border-radius: 12px; display: flex; align-items: center; justify-content: center;
+        color: var(--brand-primary); font-size: 1.2rem;
+    }
+
+    .bg-primary-soft { background: rgba(79, 70, 229, 0.1); }
+    
+    .btn-brand-primary {
+        background: var(--brand-primary); color: white; border-radius: 14px; font-weight: 700; border: none;
+    }
+    .btn-brand-primary:hover { background: var(--brand-secondary); transform: translateY(-2px); color: white; }
+</style>
+{% endblock %}

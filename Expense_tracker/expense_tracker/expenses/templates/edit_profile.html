@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+  <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width: 500px;">
+    <div class="card-body p-5">
+      <h3 class="text-center text-primary fw-bold mb-4">Edit Profile ✏️</h3>
+
+      <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Username</label>
+          <input type="text" name="username" value="{{ user.username }}" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Email</label>
+          <input type="email" name="email" value="{{ user.email }}" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

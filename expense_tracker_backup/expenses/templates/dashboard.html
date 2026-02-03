@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | Spendora{% endblock %}
+
+{% block content %}
+<style>
+  body { background: #f5f7fb; }
+
+  .dashboard-header {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    padding: 35px 25px;
+    border-radius: 18px;
+    color: white;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dashboard-header::after {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 120px;
+    height: 120px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    animation: float 6s infinite alternate;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(10px) rotate(45deg); }
+  }
+
+  .metric-card {
+    border-radius: 16px;
+    padding: 24px;
+    background: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: .3s;
+  }
+
+  .metric-value { font-size: 32px; font-weight: 800; margin-top: 5px; }
+
+  
+  .chart-container {
+    position: relative;
+    width: 100% !important;
+    min-height: 350px;
+  }
+
+  #expenseChart {
+    width: 100% !important;
+    height: 320px !important;
+  }
+
+  .recent-card {
+    background: white;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+
+  .badge-category {
+    color: white;
+    padding: 5px 12px;
+    border-radius: 12px;
+    font-size: .8rem;
+    font-weight: 500;
+  }
+
+  .floating-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+    border-radius: 50%;
+    background: #4f46e5;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    text-decoration: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.floating-btn:hover {
+    background: #4338ca;
+}
+
+
+.floating-btn-tooltip {
+    position: fixed;
+    bottom: 45px;
+    right: 105px;
+    background: #111827;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+
+.floating-btn:hover + .floating-btn-tooltip {
+    opacity: 1;
+    right: 110px;
+}
+
+</style>
+
+<div class="container py-4">
+
+  <!-- HEADER -->
+  <div class="dashboard-header mb-4">
+    <div class="d-flex justify-content-between">
+      <div>
+        <h2 class="fw-bold">Hi, {{ request.user.username }} 👋</h2>
+        <p class="mb-0">Here’s your financial overview for today.</p>
+      </div>
+      <div>
+        <a href="{% url 'add_expense' %}" class="btn btn-light fw-semibold me-2">➕ Add Expense</a>
+        <a href="{% url 'view_expenses' %}" class="btn btn-outline-light fw-semibold">View All</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRIC CARDS -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-4">
+      <div class="metric-card">
+        <div>
+          <p class="text-muted mb-1">Total Spent</p>
+          <div class="metric-value text-danger" id="totalSpent">₹{{ total_expense }}</div>
+        </div>
+        <div class="fs-2 text-danger"><i class="bi bi-wallet2"></i></div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="metric-card">
+        <div>
+          <p class="text-muted mb-1">Categories</p>
+          <div class="metric-value text-primary" id="totalCat">{{ total_categories }}</div>
+        </div>
+        <div class="fs-2 text-primary"><i class="bi bi-grid"></i></div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="metric-card">
+        <div>
+          <p class="text-muted mb-1">Total Entries</p>
+          <div class="metric-value text-success" id="totalItems">{{ total_items }}</div>
+        </div>
+        <div class="fs-2 text-success"><i class="bi bi-file-earmark-text"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="recent-card mb-4">
+    <h5 class="fw-bold mb-3">Spending by Category</h5>
+
+    <div class="chart-container">
+      <canvas id="expenseChart"></canvas>
+    </div>
+  </div>
+
+  <!-- RECENT EXPENSES -->
+  <div class="recent-card">
+    <h5 class="fw-bold mb-3">Recent Expenses</h5>
+
+    {% if expenses %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead class="table-secondary">
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for expense in expenses %}
+              <tr>
+                <td>{{ expense.title }}</td>
+               <td>
+                <span class="badge-category" style="background: #4f46e5;"> <!-- You can hardcode color or add a color field later -->
+                    {{ expense.category }}
+                </span>
+                </td>
+
+
+
+                <td class="fw-bold text-danger">₹{{ expense.amount }}</td>
+                <td>{{ expense.date }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="text-muted text-center">No expenses recorded yet.</p>
+    {% endif %}
+  </div>
+</div>
+
+<a href="{% url 'add_expense' %}" class="floating-btn">+</a>
+
+<!-- CHART.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ categories|json_script:"cat_data" }}
+{{ category_totals|json_script:"cat_totals_data" }}
+{{ total_expense|json_script:"total_expense_data" }}
+{{ total_categories|json_script:"total_categories_data" }}
+{{ total_items|json_script:"total_items_data" }}
+
+<script>
+  const categories = JSON.parse(document.getElementById("cat_data").textContent);
+  const categoryTotals = JSON.parse(document.getElementById("cat_totals_data").textContent);
+
+  const ctx = document.getElementById("expenseChart");
+
+  new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: categories,
+      datasets: [{
+        data: categoryTotals,
+        backgroundColor: [
+          "#4f46e5", "#6366f1", "#f43f5e", "#f59e0b", "#10b981"
+        ],
+        hoverOffset: 20
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: "bottom" } }
+    }
+  });
+</script>
+<a href="{% url 'add_expense' %}" class="floating-btn">
+    +
+</a>
+
+<div class="floating-btn-tooltip">
+    Add New Expense
+</div>
+
+
+{% endblock %}

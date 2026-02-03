@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ wallet.name }} | Spendora{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 gap-3">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-2">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}" class="text-decoration-none">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Wallets</li>
+                </ol>
+            </nav>
+            <h1 class="fw-800 display-5 mb-0">{{ wallet.name }}</h1>
+            <p class="text-muted mb-0">
+                <i class="bi bi-person-circle me-1"></i> Managed by <strong>{{ wallet.created_by.username }}</strong>
+            </p>
+        </div>
+        <div>
+            <a href="{% url 'add-wallet-expense' wallet.id %}" class="btn btn-brand-primary px-4 py-2 shadow-sm">
+                <i class="bi bi-plus-lg me-2"></i>Add Expense
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="glass-card p-4 border-start border-primary border-4">
+                <small class="text-muted text-uppercase fw-bold ls-1">Total Pool</small>
+                <h2 class="fw-800 mb-0 mt-1">₹{{ total_expense }}</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card p-4 border-start border-info border-4">
+                <small class="text-muted text-uppercase fw-bold ls-1">Active Members</small>
+                <h2 class="fw-800 mb-0 mt-1">{{ wallet.members.count }}</h2>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card p-4 border-start border-success border-4">
+                <small class="text-muted text-uppercase fw-bold ls-1">Categories Used</small>
+                <h2 class="fw-800 mb-0 mt-1">{{ category_contrib|length }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="glass-card p-4 mb-4">
+                <h5 class="fw-bold mb-4">Member Contributions</h5>
+                <div class="member-stack">
+                    {% for member, amount in member_contrib %}
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-sm me-3">{{ member|slice:":1"|upper }}</div>
+                            <span class="fw-semibold">{{ member }}</span>
+                        </div>
+                        <span class="badge bg-light text-dark rounded-pill px-3">₹{{ amount }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4">Spending by Category</h5>
+                {% for cat, total in category_contrib %}
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span class="small fw-bold">{{ cat }}</span>
+                        <span class="small text-muted">₹{{ total }}</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-primary" style="width: 70%"></div> 
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="glass-card p-4 h-100">
+                <h5 class="fw-bold mb-4">Recent Transactions</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle custom-table">
+                        <thead>
+                            <tr>
+                                <th>Expense</th>
+                                <th>Category</th>
+                                <th>Spent By</th>
+                                <th class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for e in expenses %}
+                            <tr>
+                                <td>
+                                    <div class="fw-bold">{{ e.title }}</div>
+                                    <small class="text-muted">{{ e.date_created|date:"M d" }}</small>
+                                </td>
+                                <td><span class="category-tag">{{ e.category }}</span></td>
+                                <td>{{ e.user.username }}</td>
+                                <td class="text-end fw-800">₹{{ e.amount }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-muted">No expenses recorded yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .fw-800 { font-weight: 800; }
+    .ls-1 { letter-spacing: 0.5px; font-size: 0.7rem; }
+    
+    .glass-card {
+        background: var(--card-light);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .btn-brand-primary {
+        background: var(--brand-primary);
+        color: white; border: none; border-radius: 10px; font-weight: 600;
+    }
+
+    .avatar-sm {
+        width: 32px; height: 32px; background: rgba(79, 70, 229, 0.1);
+        color: var(--brand-primary); border-radius: 8px;
+        display: flex; align-items: center; justify-content: center; font-weight: bold;
+    }
+
+    .category-tag {
+        background: #f1f5f9; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; color: #475569;
+    }
+    body.dark-mode .category-tag { background: #334155; color: #e2e8f0; }
+
+    .custom-table thead th {
+        background: transparent; border-top: none; font-size: 0.75rem;
+        text-transform: uppercase; color: var(--text-muted); padding-bottom: 15px;
+    }
+    .custom-table tbody td { padding: 15px 0; border-bottom: 1px solid var(--border-color); }
+</style>
+{% endblock %}
