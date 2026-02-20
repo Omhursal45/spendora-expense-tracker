@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="fw-bold">My Wallets</h2>
+        <a href="{% url 'wallet-create' %}" class="btn btn-primary">+ Create Wallet</a>
+    </div>
+    <hr>
+
+    {% if wallets %}
+        <div class="list-group">
+            {% for w in wallets %}
+                <a href="{% url 'wallet-detail' w.id %}" class="list-group-item list-group-item-action">
+                    <h5 class="mb-1">{{ w.name }}</h5>
+                    <small>Members: {{ w.members.count }}</small><br>
+                    <small>Created: {{ w.created_at|date:"M d, Y" }}</small>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No wallets created yet.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

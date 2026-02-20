@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}Add Expense | Spendora{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5">
+            
+            <div class="mb-4">
+                <a href="{% url 'wallet-detail' wallet.id %}" class="text-decoration-none text-muted small fw-bold">
+                    <i class="bi bi-arrow-left-short fs-5 align-middle"></i> Back to {{ wallet.name }}
+                </a>
+            </div>
+
+            <div class="glass-card overflow-hidden border-0 shadow-lg">
+                <div class="bg-brand-gradient p-4 text-white text-center position-relative">
+                    <div class="icon-circle shadow-sm mb-3">
+                        <i class="bi bi-plus-lg fs-4"></i>
+                    </div>
+                    <h3 class="fw-800 mb-1">New Expense</h3>
+                    <p class="small opacity-75 mb-0">Record a transaction for <strong>{{ wallet.name }}</strong></p>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    <form method="post" action="{% url 'add-wallet-expense' wallet.id %}" novalidate>
+                        {% csrf_token %}
+
+                        <div class="mb-4">
+                            <label class="form-label-custom">Expense Title</label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-pencil-square"></i></span>
+                                {{ form.title|add_class:"form-control-custom"|attr:"placeholder:Dinner, Fuel, Rent..." }}
+                            </div>
+                            {% for error in form.title.errors %}
+                                <div class="text-danger smallest mt-1 fw-bold"><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label-custom">Amount (INR)</label>
+                            <div class="input-group-custom">
+                                <span class="input-icon fw-bold">₹</span>
+                                {{ form.amount|add_class:"form-control-custom"|attr:"placeholder:0.00"|attr:"type:number" }}
+                            </div>
+                            {% for error in form.amount.errors %}
+                                <div class="text-danger smallest mt-1 fw-bold"><i class="bi bi-exclamation-circle me-1"></i>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label-custom">Category</label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-grid-fill"></i></span>
+                                <select id="category" name="category" class="form-select-custom" required>
+                                    <option value="" disabled selected>Select category</option>
+                                    <option value="Food">🍔 Food & Drinks</option>
+                                    <option value="Transport">🚗 Transport</option>
+                                    <option value="Shopping">🛍️ Shopping</option>
+                                    <option value="Bills">🧾 Bills & Utilities</option>
+                                    <option value="Entertainment">🎬 Entertainment</option>
+                                    <option value="Health">💊 Health</option>
+                                    <option value="Education">🎓 Education</option>
+                                    <option value="Other">✨ Other (Custom)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4 animate-fade-in" id="custom_category_div" style="display: none;">
+                            <label class="form-label-custom">Custom Category Name</label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-stars"></i></span>
+                                <input type="text" name="custom_category" id="custom_category" class="form-control-custom" placeholder="e.g. Subscriptions">
+                            </div>
+                        </div>
+
+                        <div class="mb-5">
+                            <label class="form-label-custom">Transaction Date</label>
+                            <div class="input-group-custom">
+                                <span class="input-icon"><i class="bi bi-calendar-event"></i></span>
+                                {{ form.date_created|add_class:"form-control-custom"|attr:"type:date" }}
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-12 col-sm-8">
+                                <button type="submit" class="btn btn-brand-primary w-100 py-3 shadow">
+                                    <i class="bi bi-check2-circle me-2"></i>Save Expense
+                                </button>
+                            </div>
+                            <div class="col-12 col-sm-4">
+                                <a href="{% url 'wallet-detail' wallet.id %}" class="btn btn-light-custom w-100 py-3 text-center">
+                                    Cancel
+                                </a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --brand-primary: #4f46e5;
+        --brand-secondary: #7c3aed;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --bg-light: #f8fafc;
+        --border-color: #e2e8f0;
+        --card-light: #ffffff;
+    }
+
+    .fw-800 { font-weight: 800; }
+    .smallest { font-size: 0.7rem; letter-spacing: 0.3px; }
+    
+    .glass-card {
+        background: var(--card-light);
+        border: 1px solid var(--border-color);
+        border-radius: 32px;
+    }
+
+    .bg-brand-gradient {
+        background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+    }
+
+    .icon-circle {
+        width: 56px; height: 56px; background: rgba(255,255,255,0.2);
+        border-radius: 18px; display: inline-flex; align-items: center; justify-content: center;
+        backdrop-filter: blur(5px);
+    }
+
+    .form-label-custom {
+        font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+        color: var(--text-muted); margin-left: 4px; margin-bottom: 8px; display: block;
+        letter-spacing: 0.8px;
+    }
+
+    .input-group-custom {
+        position: relative; display: flex; align-items: center;
+    }
+
+    .input-icon {
+        position: absolute; left: 16px; color: var(--brand-primary); z-index: 5;
+        font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+    }
+
+    .form-control-custom, .form-select-custom {
+        width: 100%; padding: 14px 16px 14px 48px;
+        background: var(--bg-light); border: 2px solid transparent;
+        border-radius: 16px; transition: all 0.2s ease-in-out;
+        color: var(--text-main); font-weight: 500;
+    }
+
+    .form-control-custom:focus, .form-select-custom:focus {
+        outline: none; border-color: var(--brand-primary);
+        background: #fff; box-shadow: 0 10px 20px -10px rgba(79, 70, 229, 0.3);
+    }
+
+    /* Primary CTA Button */
+    .btn-brand-primary {
+        background: var(--brand-primary); color: white; border: none;
+        border-radius: 16px; font-weight: 700; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-brand-primary:hover { 
+        background: var(--brand-secondary); transform: translateY(-3px); 
+        box-shadow: 0 12px 24px -8px rgba(124, 58, 237, 0.5); color: white;
+    }
+
+    /* Cancel Button */
+    .btn-light-custom {
+        background: var(--bg-light); color: var(--text-muted); border: none;
+        border-radius: 16px; font-weight: 600; text-decoration: none; display: block;
+    }
+    .btn-light-custom:hover { background: #f1f5f9; color: var(--text-main); }
+
+    /* Animation */
+    .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const categorySelect = document.getElementById('category');
+        const customDiv = document.getElementById('custom_category_div');
+        const customInput = document.getElementById('custom_category');
+
+        categorySelect.addEventListener('change', function() {
+            if (this.value === 'Other') {
+                customDiv.style.display = 'block';
+                customInput.setAttribute('required', 'true');
+                customInput.focus();
+            } else {
+                customDiv.style.display = 'none';
+                customInput.removeAttribute('required');
+                customInput.value = '';
+            }
+        });
+    });
+</script>
+{% endblock %}

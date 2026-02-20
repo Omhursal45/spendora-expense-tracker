@@ -3,49 +3,62 @@
 
 {% block content %}
 <style>
-  body { background: #f5f7fb; }
+    :root {
+        /* Professional Palette */
+        --primary-gradient: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+        --glass-bg: rgba(255, 255, 255, 0.9);
+        --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        
+        /* Light Mode */
+        --app-bg: #f8fafc;
+        --card-fill: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border-color: #e2e8f0;
+    }
 
-  .dashboard-header {
-    background: linear-gradient(135deg, #4f46e5, #6366f1);
-    padding: 35px 25px;
-    border-radius: 18px;
-    color: white;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-    position: relative;
-    overflow: hidden;
-  }
+    body.dark-mode {
+        --app-bg: #0f172a;
+        --card-fill: #1e293b;
+        --text-main: #f1f5f9;
+        --text-muted: #94a3b8;
+        --border-color: #334155;
+    }
 
-  .dashboard-header::after {
-    content: '';
-    position: absolute;
-    top: -20px;
-    right: -20px;
-    width: 120px;
-    height: 120px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    animation: float 6s infinite alternate;
-  }
+    body {
+        background-color: var(--app-bg);
+        color: var(--text-main);
+        font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+        transition: all 0.3s ease;
+    }
 
-  @keyframes float {
-    0% { transform: translateY(0) rotate(0deg); }
-    100% { transform: translateY(10px) rotate(45deg); }
-  }
+    /* Header Section */
+    .welcome-banner {
+        background: var(--primary-gradient);
+        border-radius: 24px;
+        padding: 40px;
+        color: white;
+        margin-bottom: 30px;
+        box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
 
-  .metric-card {
-    border-radius: 16px;
-    padding: 24px;
-    background: white;
-    border: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transition: .3s;
-  }
+    /* Stat Cards */
+    .stat-card {
+        background: var(--card-fill);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 24px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        box-shadow: var(--card-shadow);
+    }
 
-  .metric-value { font-size: 32px; font-weight: 800; margin-top: 5px; }
+    .stat-card:hover {
+        transform: translateY(-5px);
+    }
 
+<<<<<<< HEAD
   .chart-container { position: relative; width: 100% !important; min-height: 350px; }
 
   .recent-card {
@@ -55,15 +68,42 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
     margin-bottom: 20px;
   }
+=======
+    .stat-label {
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        color: var(--text-muted);
+        font-weight: 600;
+    }
 
-  .badge-category {
-    color: white;
-    padding: 5px 12px;
-    border-radius: 12px;
-    font-size: .8rem;
-    font-weight: 500;
-  }
+    .stat-value {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-top: 8px;
+        display: block;
+    }
 
+    /* Insights Box */
+    .ai-insight-box {
+        background: rgba(99, 102, 241, 0.05);
+        border-left: 4px solid #6366f1;
+        border-radius: 12px;
+        padding: 20px;
+    }
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
+
+    /* Chart & Table Cards */
+    .content-card {
+        background: var(--card-fill);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 25px;
+        height: 100%;
+        box-shadow: var(--card-shadow);
+    }
+
+<<<<<<< HEAD
   .floating-btn {
     position: fixed;
     bottom: 30px;
@@ -144,22 +184,105 @@
         <div>
           <p class="text-muted mb-1">Categories</p>
           <div class="metric-value text-primary">{{ total_categories }}</div>
+=======
+    .table thead th {
+        background: var(--app-bg);
+        border-bottom: none;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        padding: 15px;
+    }
+
+    .table tbody td {
+        padding: 15px;
+        vertical-align: middle;
+        border-color: var(--border-color);
+    }
+
+    /* Action Buttons */
+    .btn-action {
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    .floating-add {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 65px;
+        height: 65px;
+        background: var(--primary-gradient);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        box-shadow: 0 10px 15px rgba(99, 102, 241, 0.4);
+        text-decoration: none;
+        z-index: 1000;
+    }
+
+    .floating-add:hover {
+        transform: scale(1.1);
+        color: white;
+    }
+
+    .wallet-pill {
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background: var(--card-fill);
+    }
+</style>
+
+<div class="container py-4">
+    <div class="welcome-banner d-md-flex align-items-center justify-content-between">
+        <div>
+            <h1 class="fw-bold mb-1">Welcome back, {{ request.user.username }}!</h1>
+            <p class="mb-0 opacity-75">Here is what's happening with your money today.</p>
         </div>
-        <div class="fs-2 text-primary"><i class="bi bi-grid"></i></div>
-      </div>
+        <div class="mt-4 mt-md-0 d-flex gap-2 flex-wrap">
+            <a href="{% url 'add_expense' %}" class="btn btn-light btn-action">Add Expense</a>
+            <a href="{% url 'export_pdf' %}" class="btn btn-white btn-action bg-white bg-opacity-25 text-white border-0">Export Reports</a>
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
+        </div>
     </div>
 
+<<<<<<< HEAD
     <div class="col-md-4">
       <div class="metric-card">
         <div>
           <p class="text-muted mb-1">Total Entries</p>
           <div class="metric-value text-success">{{ total_items }}</div>
+=======
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <span class="stat-label">Total Spending</span>
+                <span class="stat-value text-indigo">₹{{ total_expense }}</span>
+            </div>
         </div>
-        <div class="fs-2 text-success"><i class="bi bi-file-earmark-text"></i></div>
-      </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <span class="stat-label">Active Categories</span>
+                <span class="stat-value text-primary">{{ total_categories }}</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <span class="stat-label">Total Transactions</span>
+                <span class="stat-value text-success">{{ total_items }}</span>
+            </div>
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
+        </div>
     </div>
-  </div>
 
+<<<<<<< HEAD
   <!-- CHARTS ROW -->
   <div class="row g-4 mb-4">
     <!-- Spending by Category -->
@@ -253,10 +376,106 @@ new Chart(document.getElementById("expenseChart"), {
 </script>
 
 <!-- Monthly Expenses Chart -->
+=======
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="content-card mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold mb-0">Spending Trends</h5>
+                    <small class="text-muted">Last 6 Months</small>
+                </div>
+                <div style="height: 300px;">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h5 class="fw-bold mb-4">Recent Transactions</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for expense in expenses %}
+                            <tr>
+                                <td><span class="fw-semibold">{{ expense.title }}</span></td>
+                                <td><span class="badge rounded-pill bg-light text-dark border">{{ expense.category }}</span></td>
+                                <td class="fw-bold text-danger">₹{{ expense.amount }}</td>
+                                <td class="text-muted small">{{ expense.date_created|date:"M d, Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="text-center py-4 text-muted">No transactions found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{% url 'view_expenses' %}" class="text-decoration-none fw-bold small">View All Activity →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="content-card mb-4">
+                <h5 class="fw-bold mb-3">AI Insights ✨</h5>
+                {% if insights %}
+                    {% for i in insights %}
+                    <div class="ai-insight-box mb-3">
+                        <p class="small mb-1">{{ i.message }}</p>
+                        <span class="text-muted" style="font-size: 0.7rem;">{{ i.created_at|timesince }} ago</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted small">Add more data to generate personalized spending insights.</p>
+                {% endif %}
+            </div>
+
+            <div class="content-card mb-4">
+                <h5 class="fw-bold mb-3">By Category</h5>
+                <div style="height: 220px;">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0">My Wallets</h5>
+                    <a href="{% url 'wallet-create' %}" class="small text-decoration-none">+ New</a>
+                </div>
+                {% for wallet in wallets %}
+                <div class="wallet-pill">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold">{{ wallet.name }}</span>
+                        <a href="{% url 'wallet-dashboard' wallet.id %}" class="btn btn-sm btn-outline-primary border-0">Open</a>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted small">No active wallets.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="{% url 'add_expense' %}" class="floating-add">
+    <i>+</i>
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{ categories|json_script:"cat_data" }}
+{{ category_totals|json_script:"cat_totals_data" }}
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 {{ months|json_script:"month_labels" }}
 {{ monthly_totals|json_script:"month_data" }}
 
 <script>
+<<<<<<< HEAD
 const monthLabels = JSON.parse(document.getElementById("month_labels").textContent);
 const monthData = JSON.parse(document.getElementById("month_data").textContent);
 
@@ -289,5 +508,57 @@ new Chart(document.getElementById("monthlyChart"), {
     }
 });
 </script>
+=======
+    const ctx1 = document.getElementById('expenseChart').getContext('2d');
+    const categories = JSON.parse(document.getElementById("cat_data").textContent);
+    const categoryTotals = JSON.parse(document.getElementById("cat_totals_data").textContent);
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 
+    new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+            labels: categories,
+            datasets: [{
+                data: categoryTotals,
+                backgroundColor: ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'],
+                hoverOffset: 4,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11 } } } }
+        }
+    });
+
+    const ctx2 = document.getElementById('monthlyChart').getContext('2d');
+    const monthLabels = JSON.parse(document.getElementById("month_labels").textContent);
+    const monthData = JSON.parse(document.getElementById("month_data").textContent);
+
+    new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                label: 'Spend',
+                data: monthData,
+                borderColor: '#6366f1',
+                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, grid: { display: false } },
+                x: { grid: { display: false } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+</script>
 {% endblock %}

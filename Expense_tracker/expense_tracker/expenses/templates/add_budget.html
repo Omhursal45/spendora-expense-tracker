@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Spendora - Set New Budget{% endblock %}
+
+{% block content %}
+
+
+<style>
+    /* Brand Button Styling */
+    .btn-brand {
+        background-color: var(--brand-primary, #4f46e5);
+        border: 1px solid var(--brand-primary, #4f46e5);
+        color: white;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+
+    .btn-brand:hover {
+        background-color: #4338ca;
+        border-color: #4338ca;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+    }
+
+    /* Form Control Focus States */
+    .form-select:focus, .form-control:focus {
+        background: var(--bg-light);
+        border-color: var(--brand-primary) !important;
+        box-shadow: 0 0 0 0.25rem rgba(79, 70, 229, 0.1);
+        outline: none;
+    }
+
+    /* Custom Radio Styling for Icons */
+    .form-check-input:checked {
+        background-color: var(--brand-primary);
+        border-color: var(--brand-primary);
+    }
+    
+    .form-check-label i {
+        font-size: 1.2rem;
+        color: var(--text-main);
+    }
+    /* Night Mode Overrides */
+    body.dark-mode .card {
+        background-color: #1e293b !important; /* Slate 800 */
+        color: #f8fafc;
+    }
+
+    body.dark-mode .form-control, 
+    body.dark-mode .form-select,
+    body.dark-mode .input-group-text,
+    body.dark-mode .rounded {
+        background-color: #334155 !important; /* Slate 700 */
+        color: #f8fafc !important;
+        border: 1px solid #475569 !important;
+    }
+
+    body.dark-mode .text-muted {
+        color: #94a3b8 !important; /* Lighter muted text for dark bg */
+    }
+
+    body.dark-mode label {
+        color: #cbd5e1;
+    }
+
+    /* Keep the icon contrast high in dark mode */
+    body.dark-mode .bi {
+        color: #f8fafc;
+    }
+</style>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg p-4" style="background: var(--card-light); border-radius: 20px;">
+                <div class="text-center mb-4">
+                    <div class="bg-primary bg-opacity-10 text-primary d-inline-block p-3 rounded-circle mb-3">
+                        <i class="bi bi-piggy-bank fs-2"></i>
+                    </div>
+                    <h2 class="fw-800">Set New Budget</h2>
+                    <p class="text-muted">Set a limit to keep your spending in check.</p>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-uppercase">Expense Category</label>
+                        <select name="category" class="form-select border-0 shadow-sm py-2" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="Food & Drinks">Food & Drinks</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Rent & Bills">Rent & Bills</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Health">Health</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small text-uppercase">Monthly Limit (₹)</label>
+                        <div class="input-group">
+                            <span class="input-group-text border-0 bg-transparent">₹</span>
+                            <input type="number" name="amount" step="0.01" class="form-control border-0 shadow-sm py-2" style="background: var(--bg-light);" placeholder="e.g. 5000" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold small text-uppercase">Budget Icon</label>
+                        <div class="d-flex gap-3 justify-content-between p-2 rounded" style="background: var(--bg-light);">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="icon" value="bi-cup-hot" checked>
+                                <label class="form-check-label"><i class="bi bi-cup-hot"></i></label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="icon" value="bi-car-front">
+                                <label class="form-check-label"><i class="bi bi-car-front"></i></label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="icon" value="bi-house-door">
+                                <label class="form-check-label"><i class="bi bi-house-door"></i></label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="icon" value="bi-cart">
+                                <label class="form-check-label"><i class="bi bi-cart"></i></label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="icon" value="bi-controller">
+                                <label class="form-check-label"><i class="bi bi-controller"></i></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-brand py-2 rounded-pill">Save Budget</button>
+                        <a href="{% url 'budgets' %}" class="btn btn-light py-2 rounded-pill">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

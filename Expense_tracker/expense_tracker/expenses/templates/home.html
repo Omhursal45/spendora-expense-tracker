@@ -2,96 +2,85 @@
 {% block title %}Spendora – Smart Expense Tracker{% endblock %}
 {% block content %}
 
-<!-- 🌈 HERO SECTION -->
-<section 
-  class="text-white d-flex align-items-center" 
-  style="min-height: 90vh;
-         background: linear-gradient(135deg, #6a11cb, #2575fc);
-         position: relative; overflow: hidden;">
-  
-  <!-- Floating Blobs -->
-  <div class="position-absolute bg-white opacity-10 rounded-circle" 
-       style="width: 250px; height: 250px; top: 10%; left: 5%; filter: blur(80px);"></div>
-  <div class="position-absolute bg-white opacity-10 rounded-circle" 
-       style="width: 300px; height: 300px; bottom: 5%; right: 5%; filter: blur(100px);"></div>
+<!-- HERO SECTION -->
+<section class="hero-section d-flex align-items-center text-white" style="min-height: 90vh; position: relative; overflow: hidden;">
 
-  <div class="container text-center" data-aos="fade-up">
-    <h1 class="display-3 fw-bold mb-3 animate__animated animate__fadeInDown">
+  <!-- Floating Blobs -->
+  <div class="position-absolute blob1"></div>
+  <div class="position-absolute blob2"></div>
+
+  <div class="container text-center px-3" data-aos="fade-up">
+    <h1 class="fw-bold mb-3 animate__animated animate__fadeInDown hero-title">
       Smarter Spending Starts Here ✨
     </h1>
-    <p class="lead mb-4 animate__animated animate__fadeInUp" style="font-size: 1.3rem;">
+    <p class="lead mb-4 animate__animated animate__fadeInUp hero-subtitle">
       Track your expenses effortlessly with Spendora's clean insights & intelligent reports.
     </p>
 
-    <div class="d-flex justify-content-center gap-3 mt-4">
-      <a href="{% url 'signup' %}" 
-         class="btn btn-light btn-lg px-5 py-3 fw-semibold shadow-lg rounded-pill animate__animated animate__fadeInLeft">
+    <div class="d-flex flex-column flex-md-row justify-content-center gap-3 mt-4">
+      <a href="{% url 'signup' %}" class="btn btn-light btn-lg px-5 py-3 fw-semibold shadow-lg rounded-pill animate__animated animate__fadeInLeft">
         Get Started Free
       </a>
-      <a href="{% url 'login' %}" 
-         class="btn btn-outline-light btn-lg px-5 py-3 fw-semibold rounded-pill animate__animated animate__fadeInRight">
+      <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-5 py-3 fw-semibold rounded-pill animate__animated animate__fadeInRight">
         Login
       </a>
     </div>
   </div>
 </section>
 
-<!-- ✨ FEATURES SECTION -->
-<section class="py-5 bg-light">
+<!-- FEATURES SECTION -->
+<section class="features-section py-5">
   <div class="container">
-
-    <div class="text-center mb-5" data-aos="fade-up">
-      <h2 class="fw-bold text-primary display-6">Everything You Need to Save Smarter</h2>
-      <p class="text-muted">Spendora's minimalist UI makes money management effortless.</p>
+    <div class="text-center mb-5 px-3" data-aos="fade-up">
+      <h2 class="fw-bold display-6 features-title">Everything You Need to Save Smarter</h2>
+      <p class="features-subtitle">Spendora's minimalist UI makes money management effortless.</p>
     </div>
 
     <div class="row g-4">
-      
-      <!-- Feature Card -->
-      <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
-        <div class="card shadow border-0 rounded-4 text-center p-4 feature-card">
+      <!-- Feature Card 1 -->
+      <div class="col-12 col-md-4" data-aos="zoom-in" data-aos-delay="100">
+        <div class="card shadow border-0 rounded-4 text-center p-4 feature-card h-100">
           <div class="display-4 mb-3 text-primary">⚡</div>
-          <h4 class="fw-bold mb-2">Instant Insights</h4>
-          <p class="text-muted">Get daily and monthly spending breakdowns in one clean dashboard.</p>
+          <h4 class="fw-bold mb-2 feature-title">Instant Insights</h4>
+          <p class="feature-text">Get daily and monthly spending breakdowns in one clean dashboard.</p>
         </div>
       </div>
 
-      <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
-        <div class="card shadow border-0 rounded-4 text-center p-4 feature-card">
+      <!-- Feature Card 2 -->
+      <div class="col-12 col-md-4" data-aos="zoom-in" data-aos-delay="200">
+        <div class="card shadow border-0 rounded-4 text-center p-4 feature-card h-100">
           <div class="display-4 mb-3 text-primary">📊</div>
-          <h4 class="fw-bold mb-2">Visual Reports</h4>
-          <p class="text-muted">Beautiful charts help you understand where your money actually goes.</p>
+          <h4 class="fw-bold mb-2 feature-title">Visual Reports</h4>
+          <p class="feature-text">Beautiful charts help you understand where your money actually goes.</p>
         </div>
       </div>
 
-      <div class="col-md-4" data-aos="zoom-in" data-aos-delay="300">
-        <div class="card shadow border-0 rounded-4 text-center p-4 feature-card">
+      <!-- Feature Card 3 -->
+      <div class="col-12 col-md-4" data-aos="zoom-in" data-aos-delay="300">
+        <div class="card shadow border-0 rounded-4 text-center p-4 feature-card h-100">
           <div class="display-4 mb-3 text-primary">🛡️</div>
-          <h4 class="fw-bold mb-2">Enterprise Security</h4>
-          <p class="text-muted">Your data stays encrypted & protected with advanced Django authentication.</p>
+          <h4 class="fw-bold mb-2 feature-title">Enterprise Security</h4>
+          <p class="feature-text">Your data stays encrypted & protected with advanced Django authentication.</p>
         </div>
       </div>
-
     </div>
   </div>
 </section>
 
-<!-- 🚀 CTA SECTION -->
-<section class="text-white text-center py-5" 
-         style="background: linear-gradient(135deg, #2575fc, #6a11cb);">
-  <div class="container" data-aos="fade-up">
-    <h2 class="display-6 fw-bold mb-3">Ready to Master Your Money?</h2>
-    <p class="lead mb-4">Join Spendora and take the first step toward financial clarity.</p>
-    <a href="{% url 'signup' %}" 
-       class="btn btn-light btn-lg px-5 py-3 fw-semibold rounded-pill shadow">
+<!-- CTA SECTION -->
+<section class="cta-section text-center text-white py-5">
+  <div class="container px-3" data-aos="fade-up">
+    <h2 class="fw-bold mb-3 cta-title">Ready to Master Your Money?</h2>
+    <p class="lead mb-4 cta-subtitle">Join Spendora and take the first step toward financial clarity.</p>
+    <a href="{% url 'signup' %}" class="btn btn-light btn-lg px-5 py-3 fw-semibold rounded-pill shadow">
       Create Free Account
     </a>
   </div>
 </section>
 
-<!-- 🌐 FOOTER -->
-<footer class="bg-dark text-center text-white py-3 mt-4">
-  <p class="mb-0">© 2025 Spendora | Designed by <b>Om Hursal</b> 🌟</p>
+<!--FOOTER -->
+<footer class="footer text-center py-3">
+  <p class="mb-0" style="font-size: 0.95rem;">© 2025 Spendora | Designed by <b>Om Hursal</b> 🌟</p>
 </footer>
 
 <!-- AOS + Animate -->
@@ -101,13 +90,69 @@
 <script>AOS.init({ duration: 900, once: true });</script>
 
 <style>
-  .feature-card {
-    transition: all 0.35s ease;
-  }
-  .feature-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-  }
+/*  HERO  */
+.hero-section {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  position: relative;
+}
+.hero-title { font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 700; }
+.hero-subtitle { font-size: clamp(1rem, 3.2vw, 1.3rem); }
+
+/* Floating Blobs */
+.blob1, .blob2 {
+  background: white; border-radius: 50%; opacity: 0.1; filter: blur(81px);
+  position: absolute;
+}
+.blob1 { width: 250px; height: 250px; top: 10%; left: 5%; }
+.blob2 { width: 300px; height: 300px; bottom: 5%; right: 5%; filter: blur(100px); }
+
+/* FEATURES  */
+.features-title { color: var(--primary, #2f81f7); font-weight: 700; }
+.features-subtitle { color: #6b7280; font-size: clamp(0.95rem,2vw,1.1rem); }
+
+/* Feature Cards */
+.feature-card {
+  transition: all 0.35s ease;
+  background: #ffffff;
+  color: #1f2937;
+}
+.feature-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+.feature-card .feature-title { color: #1f2937; }
+.feature-card .feature-text { color: #4b5563; }
+
+/* CTA  */
+.cta-section { background: linear-gradient(135deg, #2575fc, #6a11cb); }
+.cta-title, .cta-subtitle { color: white; }
+
+/* FOOTER  */
+.footer { background-color: #1f1f1f; color: #e5e7eb; }
+
+/* BUTTONS  */
+.btn-outline-light { border-color: white; color: white; transition: all 0.3s ease; }
+.btn-outline-light:hover { background-color: white; color: #2575fc; }
+
+/* DARK MODE  */
+body.dark-mode {
+  background: #121212; color: #e5e7eb;
+}
+body.dark-mode .hero-section { background: linear-gradient(135deg, #1e1e1e, #2a2a2a); color: #e5e7eb; }
+body.dark-mode .blob1, body.dark-mode .blob2 { opacity: 0.05; background: #fff; }
+body.dark-mode .features-section { background: #121212; color: #e5e7eb; }
+body.dark-mode .feature-card {
+  background: #1f1f1f; color: #e5e7eb;
+  box-shadow: 0 8px 25px rgba(255,255,255,0.05);
+}
+body.dark-mode .feature-card .feature-title { color: #e5e7eb; }
+body.dark-mode .feature-card .feature-text { color: #d1d5db; }
+body.dark-mode .cta-section { background: linear-gradient(135deg, #1e3a8a, #3b0764); color: #e5e7eb; }
+body.dark-mode .footer { background-color: #121212; color: #e5e7eb; }
+body.dark-mode .btn-outline-light { color: #e5e7eb; border-color: #e5e7eb; }
+body.dark-mode .btn-outline-light:hover { background-color: #e5e7eb; color: #2575fc; }
+
+/*  RESPONSIVE  */
+@media (max-width: 480px) {
+  section { padding-top: 60px !important; padding-bottom: 60px !important; }
+}
 </style>
 
 {% endblock %}

@@ -1,92 +1,156 @@
 {% extends 'base.html' %}
 {% load static %}
-
-{% block title %}Signup | Spendora{% endblock %}
-
+{% block title %}Sign Up | Spendora{% endblock %}
 {% block content %}
 
 <div class="container-fluid p-0">
-  <div class="row g-0" style="min-height: 100vh;">
+  <div class="row g-0 min-vh-100">
 
     <!-- LEFT SIDE (SIGNUP FORM) -->
-    <div class="col-md-5 d-flex align-items-center justify-content-center"
-         style="background: #f8fafc; padding: 40px;">
+    <div class="col-md-5 d-flex align-items-center justify-content-center left-side p-4">
 
-      <div class="card shadow p-4"
-           style="width: 350px; border-radius: 1rem;">
+      <div class="card shadow p-4 animate__animated animate__fadeIn signup-card">
 
-        <h2 class="fw-bold text-center mb-2" style="color:#16a34a;">Create Account</h2>
-        <p class="text-center text-muted mb-4">Welcome to Spendora</p>
+        <h2 class="fw-bold text-center mb-2 text-primary">Create Account</h2>
+        <p class="text-center text-muted mb-4">Join Spendora and track your expenses smartly!</p>
 
-        {% if messages %}
-          {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} text-center py-2">{{ message }}</div>
-          {% endfor %}
-        {% endif %}
-
-        <form method="POST">
+        <form method="POST" novalidate>
           {% csrf_token %}
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Username</label>
-            <input type="text" name="username" class="form-control modern-input"
-                   placeholder="Enter username" required>
+            <input type="text" name="username" class="form-control modern-input" placeholder="Enter username" required>
           </div>
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Email</label>
-            <input type="email" name="email" class="form-control modern-input"
-                   placeholder="Enter email" required>
+            <input type="email" name="email" class="form-control modern-input" placeholder="Enter email" required>
           </div>
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Password</label>
-            <input type="password" name="password1" class="form-control modern-input"
-                   placeholder="Create password" required>
+            <input type="password" name="password1" class="form-control modern-input" placeholder="Enter password" required>
           </div>
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Confirm Password</label>
-            <input type="password" name="password2" class="form-control modern-input"
-                   placeholder="Confirm password" required>
+            <input type="password" name="password2" class="form-control modern-input" placeholder="Confirm password" required>
           </div>
 
-          <button class="btn btn-success w-100 py-2 fw-bold modern-btn">Sign Up</button>
+          <button class="btn btn-primary w-100 py-2 fw-bold modern-btn">
+            Sign Up
+          </button>
         </form>
 
         <p class="text-center mt-3">
-          Already have an account?
-          <a href="{% url 'login' %}" class="fw-semibold text-success">Login</a>
+          Already have an account? 
+          <a href="{% url 'login' %}" class="fw-semibold text-primary text-decoration-none">Login</a>
         </p>
 
       </div>
-
     </div>
 
-    <!-- RIGHT SIDE (BIG IMAGE SECTION) -->
+    <!-- RIGHT SIDE (IMAGE) -->
     <div class="col-md-7 d-none d-md-block p-0">
-      <img src="{% static 'images/expense.jpg' %}"
-          class="img-fluid"
-          style="height: 100vh; width: 100%; object-fit: cover; object-position: center;">
+      <img src="{% static 'images/signup.jpg' %}" class="img-fluid signup-img">
     </div>
 
   </div>
 </div>
 
+<!-- SweetAlert for messages -->
+{% if messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  {% for message in messages %}
+  Swal.fire({
+      title: "{{ message.tags|capfirst }}",
+      text: "{{ message|escapejs }}",
+      icon: "{{ message.tags }}",
+      timer: 2500,
+      showConfirmButton: false,
+  });
+  {% endfor %}
+});
+</script>
+{% endif %}
+
 <style>
-  .modern-input {
-    height: 42px;
-    border-radius: 0.6rem;
-    border: 1.5px solid #d1d5db;
-    transition: 0.25s;
+/* LIGHT MODE */
+.left-side {
+  background-color: #f8fafc;
+}
+.signup-card {
+  width: 350px;
+  border-radius: 1rem;
+  background: #ffffffee;
+}
+.modern-input {
+  height: 42px;
+  border-radius: 0.6rem;
+  border: 1.5px solid #d1d5db;
+  transition: 0.25s;
+  background-color: #ffffff;
+  color: #1f2937;
+  padding: 0 12px;
+}
+.modern-input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 6px rgba(13,110,253,0.25);
+}
+.modern-btn {
+  border-radius: 0.6rem;
+}
+.signup-img {
+  height: 100vh;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: filter 0.3s ease;
+}
+
+/* DARK MODE */
+body.dark-mode .left-side {
+  background-color: #121212;
+}
+body.dark-mode .signup-card {
+  background-color: #1f1f1f;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+body.dark-mode .modern-input {
+  border-color: #4b5563;
+  background-color: #1f1f1f;
+  color: #e5e7eb;
+}
+body.dark-mode .modern-input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 6px rgba(13,110,253,0.5);
+}
+body.dark-mode .text-muted {
+  color: #9ca3af !important;
+}
+body.dark-mode .text-primary {
+  color: #0d6efd !important;
+}
+body.dark-mode .signup-img {
+  filter: brightness(0.7);
+}
+body.dark-mode a.text-primary {
+  color: #0d6efd !important;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .left-side {
+    min-height: 70vh;
+    padding-top: 40px;
+    padding-bottom: 40px;
   }
-  .modern-input:focus {
-    border-color: #16a34a;
-    box-shadow: 0 0 6px rgba(22,163,74,0.25);
-  }
-  .modern-btn {
-    border-radius: 0.6rem;
-  }
+}
 </style>
+
+<!-- Animation -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 {% endblock %}

@@ -205,3 +205,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+<<<<<<< HEAD
+=======
+
+# Django settings (contains secrets)
+expense_tracker/settings.py
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf

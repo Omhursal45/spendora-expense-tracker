@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Spendora{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Spendora{% endblock %}</title>
 
-  <!-- ✅ Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+<<<<<<< HEAD
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -117,10 +119,225 @@
 <div class="container py-4">
   {% block content %}{% endblock %}
 </div>
+=======
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- ✅ Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        :root {
+            --brand-primary: #4f46e5;
+            --brand-secondary: #6366f1;
+            --bg-light: #f8fafc;
+            --navbar-light: rgba(255, 255, 255, 0.85);
+            --card-light: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
 
+        body.dark-mode {
+            --bg-light: #0f172a;
+            --navbar-light: rgba(15, 23, 42, 0.85);
+            --card-light: #1e293b;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background 0.4s ease, color 0.4s ease;
+        }
+
+        .navbar {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: var(--navbar-light);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.6rem 0;
+        }
+
+        .navbar-brand { font-weight: 800; color: var(--brand-primary) !important; }
+
+        /* Navigation Links Styling */
+        .nav-link {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-main) !important;
+            padding: 0.5rem 0.8rem !important;
+            border-radius: 10px;
+            margin: 0 2px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: rgba(79, 70, 229, 0.08);
+            color: var(--brand-primary) !important;
+        }
+
+        .nav-link.active {
+            background: var(--brand-primary);
+            color: #ffffff !important;
+        }
+
+        /* Utility Buttons */
+        .nav-icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border-color);
+            background: var(--card-light);
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+
+        .nav-icon-btn:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+        }
+
+        .btn-guide {
+            background: var(--brand-primary);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-menu {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: var(--card-light);
+        }
+
+        .dropdown-item {
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        main { flex-grow: 1; }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-xl sticky-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'dashboard' %}">
+                <i class="bi bi-rocket-takeoff-fill me-2"></i>
+                <span>Spendora</span>
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+                <span class="bi bi-grid-3x3-gap-fill fs-3"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMenu">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
+                            <i class="bi bi-house-door me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'view_expenses' %}active{% endif %}" href="{% url 'view_expenses' %}">
+                            <i class="bi bi-wallet2 me-1"></i> Expenses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'analytics' %}">
+                            <i class="bi bi-pie-chart me-1"></i> Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'budgets' %}">
+                            <i class="bi bi-piggy-bank me-1"></i> Budgets
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="bi bi-layers me-1"></i> Wallets
+                        </a>
+                        <ul class="dropdown-menu shadow">
+                            {% if wallets %}
+                                {% for wallet in wallets %}
+                                <li>
+                                    <a class="dropdown-item d-flex align-items-center justify-content-between" href="{% url 'wallet-dashboard' wallet.id %}">
+                                        <span><i class="bi bi-credit-card-2-front me-2 text-primary"></i> {{ wallet.name }}</span>
+                                        <span class="badge bg-light text-dark border ms-2 small">Active</span>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                                <li><hr class="dropdown-divider"></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="{% url 'wallet-create' %}"><i class="bi bi-plus-circle me-2"></i>New Wallet</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-2">
+                    <button class="nav-icon-btn position-relative" title="Notifications">
+                        <i class="bi bi-bell"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+                    </button>
+
+                    <button id="themeToggle" class="nav-icon-btn" title="Toggle Theme">
+                        <i class="bi bi-moon-stars"></i>
+                    </button>
+
+                    <button class="btn btn-guide" onclick="showExpenseGuide()">
+                        <i class="bi bi-lightning-charge-fill"></i> Guide
+                    </button>
+
+                    {% if user.is_authenticated %}
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle ms-1" data-bs-toggle="dropdown">
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; font-weight: 700;">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><h6 class="dropdown-header">Signed in as <b>{{ user.username }}</b></h6></li>
+                            <li><a class="dropdown-item" href="{% url 'profile' %}"><i class="bi bi-person me-2"></i>Account Settings</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-shield-check me-2"></i>Security</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="{% url 'logout' %}" method="post" id="logoutForm">
+                                    {% csrf_token %}
+                                    <button type="button" class="dropdown-item text-danger" onclick="confirmLogout()">
+                                        <i class="bi bi-power me-2"></i>Sign Out
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
+
+    <main class="container py-5">
+        {% block content %}{% endblock %}
+    </main>
+
+<<<<<<< HEAD
 <!-- Navbar Shadow on Scroll -->
 <script>
   window.addEventListener('scroll', function() {
@@ -162,3 +379,80 @@ function confirmLogout() {
 
 </body>
 </html>
+=======
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Use the same JS logic for Guide, Logout, and Theme from previous version
+        function showExpenseGuide() {
+    const isDark = document.body.classList.contains('dark-mode');
+    Swal.fire({
+        title: 'Mastering Spendora',
+        icon: 'info',
+        width: '600px',
+        html: `
+            <div class="text-start custom-guide-list">
+                <p class="mb-3 text-muted">Follow these steps to take control of your finances:</p>
+                <div class="mb-2">
+                    <span class="badge bg-primary me-2">1</span> 
+                    <strong>Setup Wallets:</strong> Go to 'Wallets' to create separate accounts for Cash, Bank, or Credit Cards.
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-primary me-2">2</span> 
+                    <strong>Log Expenses:</strong> Click 'Record New Expense' on the dashboard to track your daily spending.
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-primary me-2">3</span> 
+                    <strong>Set Budgets:</strong> Visit the 'Budgets' page to set monthly limits for categories like Food or Travel.
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-primary me-2">4</span> 
+                    <strong>Review Analytics:</strong> Use the 'Analytics' tab to see visual charts of where your money is going.
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-primary me-2">5</span> 
+                    <strong>Night Mode:</strong> Toggle the <i class="bi bi-moon-stars"></i> icon in the navbar for a dark workspace.
+                </div>
+            </div>
+        `,
+        confirmButtonText: "Got it!",
+        confirmButtonColor: "#4f46e5",
+        background: isDark ? '#1e293b' : '#fff',
+        color: isDark ? '#fff' : '#000',
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+        }
+    });
+}
+
+        function confirmLogout() {
+            Swal.fire({
+                title: "Ready to leave?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#4f46e5",
+                background: document.body.classList.contains('dark-mode') ? '#1e293b' : '#fff',
+                color: document.body.classList.contains('dark-mode') ? '#fff' : '#000'
+            }).then((result) => { if (result.isConfirmed) document.getElementById("logoutForm").submit(); });
+        }
+
+        const toggleBtn = document.getElementById("themeToggle");
+        const body = document.body;
+        const setDarkMode = (isDark) => {
+            if (isDark) {
+                body.classList.add("dark-mode");
+                toggleBtn.innerHTML = '<i class="bi bi-sun"></i>';
+                localStorage.setItem("theme", "dark");
+            } else {
+                body.classList.remove("dark-mode");
+                toggleBtn.innerHTML = '<i class="bi bi-moon-stars"></i>';
+                localStorage.setItem("theme", "light");
+            }
+        };
+        if (localStorage.getItem("theme") === "dark") setDarkMode(true);
+        toggleBtn.addEventListener("click", () => setDarkMode(!body.classList.contains("dark-mode")));
+    </script>
+
+</body>
+</html>
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf

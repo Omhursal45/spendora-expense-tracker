@@ -8,10 +8,13 @@ from expenses.models import Expense
 from expenses.serializers import ExpenseSerializer
 
 
+<<<<<<< HEAD
 
 # ------------------------
 # SIGNUP API (NO SERIALIZER)
 # ------------------------
+=======
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 class SignupAPI(APIView):
     def post(self, request):
         username = request.data.get("username")
@@ -27,10 +30,13 @@ class SignupAPI(APIView):
         User.objects.create_user(username=username, email=email, password=password)
         return Response({"msg": "User created successfully!"}, status=201)
 
+<<<<<<< HEAD
 
 # ------------------------
 # LOGIN API (NO SERIALIZER)
 # ------------------------
+=======
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 class LoginAPI(APIView):
     def post(self, request):
         username = request.data.get("username")
@@ -42,28 +48,37 @@ class LoginAPI(APIView):
             return Response({"msg": "Login successful!"}, status=200)
         return Response({"error": "Invalid credentials"}, status=401)
 
+<<<<<<< HEAD
 
 # ------------------------
 # HELLO TEST API
 # ------------------------
+=======
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 class HelloAPI(APIView):
     def get(self, request):
         return Response({"message": "Spendora API working!"})
 
+<<<<<<< HEAD
 
 # ------------------------
 # LIST EXPENSES
 # ------------------------
+=======
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 class ExpenseListAPI(APIView):
     def get(self, request):
         expenses = Expense.objects.all()
         serializer = ExpenseSerializer(expenses, many=True)
         return Response(serializer.data)
 
+<<<<<<< HEAD
 
 # ------------------------
 # CREATE EXPENSE
 # ------------------------
+=======
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 class ExpenseCreateAPI(APIView):
     def post(self, request):
         serializer = ExpenseSerializer(data=request.data)
@@ -72,10 +87,13 @@ class ExpenseCreateAPI(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
+<<<<<<< HEAD
 
 # ------------------------
 # UPDATE EXPENSE
 # ------------------------
+=======
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 class ExpenseUpdateAPI(APIView):
     def put(self, request, id):
         try:
@@ -89,10 +107,13 @@ class ExpenseUpdateAPI(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
+<<<<<<< HEAD
 
 # ------------------------
 # DELETE EXPENSE
 # ------------------------
+=======
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 class ExpenseDeleteAPI(APIView):
     def delete(self, request, id):
         expense = get_object_or_404(Expense, id=id)

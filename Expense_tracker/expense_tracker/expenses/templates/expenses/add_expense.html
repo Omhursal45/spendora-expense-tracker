@@ -5,6 +5,7 @@
 
 {% block content %}
 <style>
+<<<<<<< HEAD
 body { background: #f5f7fb; }
 .container-flex { display: flex; gap: 30px; flex-wrap: wrap; }
 .left-panel, .right-panel { background: white; border-radius: 20px; box-shadow: 0 8px 28px rgba(0,0,0,0.08); padding: 30px; }
@@ -90,17 +91,242 @@ button.btn-lg { width:100%; font-size:18px; }
     <!-- Tip Card -->
     <div class="tip-card">
       💡 Tip of the Day: Track your daily expenses to stay on top of your budget!
+=======
+    /* Layout Overrides to match Spendora Brand */
+    .form-card {
+        background: var(--card-light);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+    }
+
+    .stats-sidebar {
+        background: rgba(79, 70, 229, 0.03);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 2rem;
+    }
+
+    /* Input Styling */
+    .form-group label {
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .custom-field {
+        background: var(--bg-light) !important;
+        border: 1.5px solid var(--border-color) !important;
+        border-radius: 12px !important;
+        padding: 0.8rem 1rem !important;
+        color: var(--text-main) !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .custom-field:focus {
+        border-color: var(--brand-primary) !important;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1) !important;
+    }
+
+    /* Stats Item */
+    .stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .stat-row:last-child { border-bottom: none; }
+
+    .category-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    /* Tip Card Upgrade */
+    .ai-tip {
+        background: var(--brand-primary);
+        color: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .ai-tip::after {
+        content: '✨';
+        position: absolute;
+        right: 10px;
+        bottom: 5px;
+        font-size: 2rem;
+        opacity: 0.2;
+    }
+    /* Brand Button Styling */
+    .btn-brand {
+        background-color: var(--brand-primary);
+        border-color: var(--brand-primary);
+        color: white;
+        font-weight: 700;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-brand:hover {
+        background-color: #4338ca; /* A slightly darker shade for hover */
+        border-color: #4338ca;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-brand:active {
+        transform: translateY(0);
+    }
+</style>
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <button onclick="window.history.back()" class="btn btn-link text-decoration-none text-muted p-0">
+            <i class="bi bi-chevron-left"></i> Back
+        </button>
+    </nav>
+
+    <div class="row g-5">
+        <div class="col-lg-7">
+            <div class="form-card">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+                        <i class="bi bi-plus-circle-fill text-primary fs-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="fw-800 mb-0">Record Expense</h3>
+                        <p class="text-muted small mb-0">Fill in the details below to log your spending.</p>
+                    </div>
+                </div>
+
+                <form method="post" novalidate id="expenseForm">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-12 mb-4 form-group">
+                            <label>Expense Title</label>
+                            {{ form.title|add_class:"custom-field w-100"|attr:"placeholder:e.g. Weekly Grocery Run" }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-2"><i class="bi bi-exclamation-circle me-1"></i>{{ form.title.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 mb-4 form-group">
+                            <label>Amount (₹)</label>
+                            <div class="input-group">
+                                <span class="input-group-text custom-field border-end-0 bg-light">₹</span>
+                                {{ form.amount|add_class:"custom-field flex-grow-1 border-start-0"|attr:"placeholder:0.00" }}
+                            </div>
+                            {% if form.amount.errors %}
+                                <div class="text-danger small mt-2">{{ form.amount.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 mb-4 form-group">
+                            <label>Date</label>
+                            {{ form.date_created|add_class:"custom-field w-100" }}
+                            {% if form.date_created.errors %}
+                                <div class="text-danger small mt-2">{{ form.date_created.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12 mb-4 form-group">
+                            <label>Category</label>
+                            <select id="categorySelect" name="category" class="custom-field form-select w-100">
+                                <option value="" disabled selected>Select a category...</option>
+                                {% for cat in predefined_categories %}
+                                    {% if cat != "Other" %}
+                                        <option value="{{ cat }}">{{ cat }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                                <option value="Other">Other (Custom)</option>
+                            </select>
+                            <input type="text" id="customCategory" name="custom_category" class="custom-field mt-3 w-100" placeholder="Type your custom category..." style="display:none; animation: slideIn 0.3s ease;">
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-brand w-100 py-3 shadow">
+                            <i class="bi bi-check2-circle me-2"></i> Save Expense
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="stats-sidebar h-100">
+                <h5 class="fw-800 mb-4">Spending Insights</h5>
+
+                <div class="mb-5" style="height: 220px; position: relative;">
+                    <canvas id="miniCategoryChart"></canvas>
+                </div>
+
+                <div class="mb-4">
+                    <h6 class="text-muted fw-bold small text-uppercase mb-3">Top Categories</h6>
+                    {% if top_categories %}
+                        {% for cat, total in top_categories %}
+                        <div class="stat-row">
+                            <span class="fw-600 text-main"><span class="category-dot" style="background: var(--brand-primary);"></span>{{ cat }}</span>
+                            <span class="fw-800 text-main">₹{{ total }}</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted small py-3">No spending data yet. Add an expense to see breakdown.</p>
+                    {% endif %}
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="bg-white dark-bg-slate rounded-3 p-3 border border-light-subtle shadow-sm">
+                            <small class="text-muted d-block mb-1">Highest</small>
+                            <span class="fw-800 text-danger">₹{{ max_expense }}</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-white dark-bg-slate rounded-3 p-3 border border-light-subtle shadow-sm">
+                            <small class="text-muted d-block mb-1">Average</small>
+                            <span class="fw-800 text-warning">₹{{ avg_expense }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-tip shadow">
+                    <h6 class="fw-bold mb-2">Smart Tip</h6>
+                    <p class="small mb-0 opacity-75">Consistency is key! Logging expenses daily improves budget accuracy by 40%.</p>
+                </div>
+            </div>
+        </div>
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
     </div>
-  </div>
 </div>
 
+<<<<<<< HEAD
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+=======
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 {{ categories|json_script:"cat_data" }}
 {{ category_totals|json_script:"cat_totals_data" }}
 
 <script>
+<<<<<<< HEAD
 const categories = JSON.parse(document.getElementById("cat_data").textContent);
 const categoryTotals = JSON.parse(document.getElementById("cat_totals_data").textContent);
 const colors = ["#F72585","#4ECDC4","#FFD93D","#FF6F91","#4f46e5","#FF9F1C","#2EC4B6"];
@@ -120,3 +346,65 @@ new Chart(document.getElementById("miniCategoryChart"), {
 });
 </script>
 {% endblock %}
+=======
+    const ctx = document.getElementById('miniCategoryChart');
+    const catLabels = JSON.parse(document.getElementById("cat_data").textContent);
+    const catValues = JSON.parse(document.getElementById("cat_totals_data").textContent);
+    
+    // Check if dark mode is active from body class
+    const isDark = document.body.classList.contains('dark-mode');
+    
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: catLabels,
+            datasets: [{
+                data: catValues,
+                backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'],
+                borderWidth: isDark ? 2 : 1,
+                borderColor: isDark ? '#1e1e2f' : '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        usePointStyle: true,
+                        boxWidth: 8,
+                        font: { size: 10, family: 'Plus Jakarta Sans' },
+                        color: isDark ? '#94a3b8' : '#64748b'
+                    }
+                }
+            }
+        }
+    });
+
+    // Category Manual Input Logic
+    const categorySelect = document.getElementById("categorySelect");
+    const customInput = document.getElementById("customCategory");
+
+    categorySelect.addEventListener("change", function() {
+        if (this.value === "Other") {
+            customInput.style.display = "block";
+            customInput.focus();
+        } else {
+            customInput.style.display = "none";
+            customInput.value = "";
+        }
+    });
+</script>
+
+<style>
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    /* Dark Mode Utility helper if not in base */
+    body.dark-mode .dark-bg-slate { background-color: #334155 !important; border-color: #475569 !important; }
+</style>
+{% endblock %}
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf

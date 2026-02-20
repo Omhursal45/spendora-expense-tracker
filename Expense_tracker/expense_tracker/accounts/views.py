@@ -9,6 +9,13 @@ from .serializers import SignupSerializer, LoginSerializer
 from django.contrib import messages
 
 
+<<<<<<< HEAD
+=======
+# ---------------------
+# TEMPLATE VIEWS
+# ---------------------
+
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 def login_page(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -32,8 +39,13 @@ def signup_page(request):
     if request.method == "POST":
         username = request.POST.get("username")
         email = request.POST.get("email")
+<<<<<<< HEAD
         password = request.POST.get("password1")
         confirm_password = request.POST.get("password2")
+=======
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+>>>>>>> 1da35822626378c190b037b04eb757b0426bd0bf
 
         if password != confirm_password:
             return render(request, "registration/signup.html", {

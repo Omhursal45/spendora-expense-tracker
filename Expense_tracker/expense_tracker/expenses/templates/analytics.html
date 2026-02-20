@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Spendora - Insights & Analytics{% endblock %}
+
+{% block content %}
+<style>
+    .stats-card {
+        transition: all 0.3s ease;
+        border-radius: 20px;
+        border: 1px solid var(--border-color);
+        background: var(--card-light);
+    }
+    .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px -10px rgba(0,0,0,0.1);
+    }
+    .hero-gradient {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white !important;
+    }
+    .chart-container {
+        position: relative;
+        height: 320px;
+        width: 100%;
+    }
+    .category-dot {
+        height: 10px;
+        width: 10px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 10px;
+    }
+
+    /* Night Mode Support */
+    body.dark-mode .stats-card:not(.hero-gradient) {
+        background-color: #1e293b !important;
+        border-color: #334155 !important;
+        color: #f8fafc;
+    }
+    body.dark-mode .text-muted {
+        color: #94a3b8 !important;
+    }
+    body.dark-mode .list-group-item {
+        color: #f8fafc;
+    }
+    body.dark-mode .hero-gradient {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+</style>
+
+<div class="container py-2">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-800 mb-1">Insights & Analytics</h2>
+            <p class="text-muted">Real-time breakdown of your financial habits.</p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-4">
+            <div class="card stats-card hero-gradient border-0 h-100 shadow-sm">
+                <div class="card-body p-4">
+                    <small class="opacity-75 text-uppercase fw-bold">Total Spending</small>
+                    <h1 class="fw-800 mb-0 mt-1">₹{{ total_spending|default:"0.00" }}</h1>
+                    <div class="mt-4 pt-3 border-top border-white border-opacity-10">
+                        <span class="small"><i class="bi bi-arrow-up-right me-2"></i>Live from database</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="row g-4 h-100">
+                <div class="col-sm-6">
+                    <div class="card stats-card h-100 p-4 shadow-sm">
+                        <small class="text-muted fw-bold text-uppercase">Highest Single Expense</small>
+                        <h3 class="fw-800 my-2 text-danger">₹{{ max_expense|default:"0.00" }}</h3>
+                        <p class="text-muted small mb-0 mt-auto">Most expensive log</p>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card stats-card h-100 p-4 shadow-sm">
+                        <small class="text-muted fw-bold text-uppercase">Average Transaction</small>
+                        <h3 class="fw-800 my-2 text-success">₹{{ avg_expense|default:"0.00" }}</h3>
+                        <p class="text-muted small mb-0 mt-auto">Per recorded expense</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card stats-card shadow-sm border-0 h-100">
+                <div class="card-header bg-transparent border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0">Spending Distribution</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="chart-container">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card stats-card shadow-sm border-0 h-100">
+                <div class="card-header bg-transparent border-0 pt-4 px-4 text-center">
+                    <h5 class="fw-bold mb-0">Expense Categories</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="list-group list-group-flush">
+                        {% for item in category_data %}
+                        <div class="list-group-item bg-transparent px-0 py-3 border-0 d-flex justify-content-between align-items-center">
+                            <span>
+                                <span class="category-dot"></span>
+                                {{ item.category }}
+                            </span>
+                            <span class="fw-bold">₹{{ item.total }}</span>
+                        </div>
+                        {% empty %}
+                        <p class="text-muted text-center">No data found</p>
+                        {% endfor %}
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'view_expenses' %}" class="small text-decoration-none">View All Transactions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ labels|json_script:"labels-data" }}
+{{ values|json_script:"values-data" }}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const isDark = document.body.classList.contains('dark-mode');
+        const labels = JSON.parse(document.getElementById('labels-data').textContent);
+        const values = JSON.parse(document.getElementById('values-data').textContent);
+        
+        const palette = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#06b6d4'];
+
+        // Apply colors to the UI dots
+        document.querySelectorAll('.category-dot').forEach((dot, index) => {
+            dot.style.backgroundColor = palette[index % palette.length];
+        });
+
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: values,
+                    backgroundColor: palette,
+                    borderWidth: isDark ? 2 : 0,
+                    borderColor: isDark ? '#1e293b' : '#ffffff',
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: isDark ? '#94a3b8' : '#64748b',
+                            padding: 20,
+                            font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
