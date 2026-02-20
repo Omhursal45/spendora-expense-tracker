@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: spendora-expense-tracker
+    runtime: python
+    pythonVersion: 3.13
+    buildCommand: 'pip install -r requirements.txt && cd Expense_tracker && python manage.py collectstatic --no-input && python manage.py migrate'
+    startCommand: 'cd Expense_tracker && gunicorn expense_tracker.wsgi:application --bind 0.0.0.0:$PORT'
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: expense_tracker.settings
+      - key: PYTHON_VERSION
+        value: 3.13.4
